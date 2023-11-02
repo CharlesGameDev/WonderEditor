@@ -1,3 +1,4 @@
+from PyQt5.QtCore import QEvent, QObject
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -9,7 +10,9 @@ class AddActor(QMainWindow):
         super().__init__()
         self.window = window
         self.setStyleSheet("background-color: black; color: white;") 
-        self.setGeometry(0, 0, 800, 600)
+        self.start_width = 800
+        self.start_height = 600
+        self.setGeometry(0, 0, self.start_width, self.start_height)
         self.setWindowTitle("Add Actor")
 
         self.selected = None
@@ -37,6 +40,7 @@ class AddActor(QMainWindow):
 
         self.right_label_big = QLabel(self)
         self.right_label_big.setGeometry(400, 10, 400, 50)
+        self.right_label_big.setStyleSheet("background: none;")
         self.right_label_big.setText("None")
         self.right_label_big.setAlignment(Qt.AlignCenter)
         font = self.right_label_big.font()
@@ -45,6 +49,7 @@ class AddActor(QMainWindow):
 
         self.right_label_small = QLabel(self)
         self.right_label_small.setGeometry(400, 60, 400, 30)
+        self.right_label_small.setStyleSheet("background: none;")
         self.right_label_small.setText("None")
         self.right_label_small.setStyleSheet("color: gray;")
         self.right_label_small.setAlignment(Qt.AlignCenter)
@@ -66,6 +71,15 @@ class AddActor(QMainWindow):
         font = self.add_button.font()
         font.setPointSize(20)
         self.add_button.setFont(font)
+
+    def resizeEvent(self, event) -> None:
+        self.list_widget.setGeometry(0, 50, round(self.width() / 2), self.height() - 50)
+        self.search_bar.setGeometry(0, 25, round(self.width() / 2), 25)
+        self.search_text.setGeometry(0, 0, round(self.width() / 2), 25)
+        self.add_button.setGeometry(round(self.width() / 1.6), self.height() - 100, 200, 50)
+        self.right_label_big.setGeometry(round(self.width() / 2), 10, round(self.width() / 2), 50)
+        self.right_label_small.setGeometry(round(self.width() / 2), 60, round(self.width() / 2), 30)
+        self.preview_image.setGeometry(round(self.width() / 1.6), 100, 200, 400)
 
     def add_actor(self):
         if self.selected == None: return

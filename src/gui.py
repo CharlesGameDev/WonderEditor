@@ -95,10 +95,9 @@ class Window(QMainWindow):
             self.viewport.scale -= 1
             self.viewport.update()
 
-    def resizeEvent(self, a0: QResizeEvent | None) -> None:
+    def resizeEvent(self, event) -> None:
         self.no_stage_label.resize(self.size())
         self.viewport.resize(self.size())
-        return super().resizeEvent(a0)
 
     def setup_menubar(self):
         menubar = QMenuBar(self)

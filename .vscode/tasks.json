@@ -6,7 +6,7 @@
         {
             "label": "gui",
             "type": "shell",
-            "command": "python src/gui.py",
+            "command": "python3 src/gui.py",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
