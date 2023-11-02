@@ -668,30 +668,30 @@ root:
     - 2.0
   - AreaHash: !u '2992145499'
     Dynamic:
-      AfterReactionEmotion: '1'
-      ColorIdx: '-1'
-      DefaultEmotion: '1'
-      IsAppearEffect: 'False'
-      IsChangeRotInMoveDir: 'False'
-      IsOnGravity: 'True'
-      IsRotAnm: 'False'
-      MessageList: TL005
-      SlideAnmReferneceSpeed: '2.6'
+      AfterReactionEmotion: !l '1'
+      ColorIdx: !l '-1'
+      DefaultEmotion: !l '1'
+      IsAppearEffect: false
+      IsChangeRotInMoveDir: false
+      IsOnGravity: true
+      IsRotAnm: false
+      MessageList: TL599
+      SlideAnmReferneceSpeed: 2.6
     Gyaml: ObjectTalkingFlowerS
     Hash: !ul '15365925951295358901'
     InLinks:
       Delete: !l '1'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj217
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
+    Translate:
     - 51.5
     - 10.0
     - 0.0
@@ -5539,22 +5539,22 @@ root:
     - 0.0
   - AreaHash: !u '2992145499'
     Dynamic:
-      InitDir: '0'
-      IsEnableRare: 'True'
-      MapAppearType: '2'
+      InitDir: !l '1'
+      IsEnableRare: true
+      MapAppearType: !l '2'
     Gyaml: EnemyKuribo
     Hash: !ul '15405911890397587720'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj855
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
+    Translate:
     - 44.5
     - 5.0
     - 0.0
@@ -6458,8 +6458,25 @@ root:
     - 18.0
     - 0.0
   - AreaHash: !u '2992145499'
+    Gyaml: BlockRengaLight
+    Hash: !ul '13261139512070422631'
+    Layer: PlayArea1
+    Name: Course001_Main.muunt/obj945
+    Rotate:
+    - 0.0
+    - 0.0
+    - 0.0
+    Scale:
+    - 1.0
+    - 1.0
+    - 1.0
+    Translate:
+    - 25.5
+    - 6.5
+    - 0.0
+  - AreaHash: !u '2992145499'
     Dynamic:
-      ChildActorSelectName: ItemMushroom_All
+      ChildActorSelectName: ItemOneUpMushroom_Single
       ChildCreateAwaFlowerMoveDir: '0'
       DirCheckFrame: '3'
       InitItemMoveDir: '0'
@@ -8855,6 +8872,31 @@ root:
     - 0.0
   - AreaHash: !u '2992145499'
     Dynamic:
+      ChildActorSelectName: ObjectCoinYellow_Single
+      ChildCreateAwaFlowerMoveDir: !l '0'
+      DirCheckFrame: !l '3'
+      InitItemMoveDir: !l '0'
+      IsHiddenEffect: false
+      IsNoScatter: false
+      IsSetSignal: false
+    Gyaml: BlockRengaItem
+    Hash: !ul '18413295511631569597'
+    Layer: PlayArea1
+    Name: Course001_Main.muunt/obj1109
+    Rotate:
+    - 0.0
+    - 0.0
+    - 0.0
+    Scale:
+    - 1.0
+    - 1.0
+    - 1.0
+    Translate:
+    - 27.5
+    - 6.5
+    - 0.0
+  - AreaHash: !u '2992145499'
+    Dynamic:
       AccelLengthType: None
       Amplitude: 0.0
       CameraQuakeDirType: !l '0'
@@ -9078,34 +9120,34 @@ root:
     Hash: !ul '9858137790284269926'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj1138
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
-    - 25.5
-    - 6.5
+    Translate:
+    - 66.5
+    - 3.5
     - 0.0
   - AreaHash: !u '2992145499'
     Gyaml: BlockRengaLight
     Hash: !ul '16489912694675888680'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj1139
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
-    - 27.5
-    - 6.5
+    Translate:
+    - 67.5
+    - 3.5
     - 0.0
   - AreaHash: !u '2992145499'
     Gyaml: BlockRengaLight
@@ -9146,17 +9188,17 @@ root:
     Hash: !ul '15242966059835243479'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj1142
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
-    - 29.5
-    - 6.5
+    Translate:
+    - 67.5
+    - 4.5
     - 0.0
   - AreaHash: !u '2992145499'
     Gyaml: BlockRengaLight
@@ -9336,27 +9378,27 @@ root:
     - 0.0
   - AreaHash: !u '2992145499'
     Dynamic:
-      ChildActorSelectName: ObjectCoinYellow_All
-      ChildCreateAwaFlowerMoveDir: '0'
-      DirCheckFrame: '3'
-      InitItemMoveDir: '0'
-      IsHiddenEffect: 'False'
-      IsNoScatter: 'False'
-      IsSetSignal: 'False'
+      ChildActorSelectName: ItemMushroomOrElephantSuit_All
+      ChildCreateAwaFlowerMoveDir: !l '0'
+      DirCheckFrame: !l '3'
+      InitItemMoveDir: !l '0'
+      IsHiddenEffect: false
+      IsNoScatter: false
+      IsSetSignal: false
     Gyaml: BlockHatena
     Hash: !ul '17093436716994172801'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj1151
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
-    - 27.5
+    Translate:
+    - 70.5
     - 10.5
     - 0.0
   - AreaHash: !u '2992145499'
@@ -9500,6 +9542,54 @@ root:
     Translate:
     - 31.5
     - 8.5
+    - 0.0
+  - AreaHash: !u '2992145499'
+    Dynamic:
+      AccelLengthType: None
+      CameraQuakeDirType: !l '0'
+      CameraVibrationStrength: !l '2'
+      ChildActorSelectName: None
+      DecelLengthType: None
+      DowsingChangeType: !l '0'
+      DowsingKind: !l '0'
+      DowsingSaveId: !l '-1'
+      HasRailMoveArriveAction: false
+      HasRailMovePreMoveAction: false
+      InitialStartDirType: !l '0'
+      InitialStartPosDirType: !l '0'
+      IsAccDecOnlyEdge: false
+      IsAcceleratingMove: false
+      IsCalcOnly: false
+      IsEmitXLink: false
+      IsForceModelVibrateOnArrive: false
+      IsMagicMove: false
+      IsNotDowsing: true
+      IsStopOnRailPointWhileOffSignal: false
+      IsTargetCenter: false
+      MoveRadius: 0.0
+      MoveSpeed: !l '1'
+      RailModelVibrateType: !l '1'
+      RailMoveStartFrameType: !l '0'
+      RailSpeedType: !l '0'
+      SignalWaitFrame: !l '0'
+      SpeedType: !l '1'
+      YAmplitude: 0.0
+      YAmplitudeSpeed: !l '1'
+    Gyaml: ObjectMiniFlowerInAir
+    Hash: !ul '11697371877345529666'
+    Layer: PlayArea1
+    Name: Course001_Main.muunt/obj1323
+    Rotate:
+    - 0.0
+    - 0.0
+    - 0.0
+    Scale:
+    - 1.0
+    - 1.0
+    - 1.0
+    Translate:
+    - 19.0
+    - 5.0
     - 0.0
   - AreaHash: !u '2992145499'
     Dynamic:
@@ -9754,6 +9844,33 @@ root:
       IsNoScatter: false
       IsSetSignal: false
     Gyaml: BlockRengaItem
+    Hash: !ul '7100850780582112679'
+    InLinks:
+      Create: !l '1'
+    Layer: PlayArea1
+    Name: Course001_Main.muunt/obj1593
+    Rotate:
+    - 0.0
+    - 0.0
+    - 0.0
+    Scale:
+    - 1.0
+    - 1.0
+    - 1.0
+    Translate:
+    - 31.5
+    - 8.5
+    - 0.0
+  - AreaHash: !u '2992145499'
+    Dynamic:
+      ChildActorSelectName: ObjectCoinYellow_Single
+      ChildCreateAwaFlowerMoveDir: !l '0'
+      DirCheckFrame: !l '3'
+      InitItemMoveDir: !l '0'
+      IsHiddenEffect: false
+      IsNoScatter: false
+      IsSetSignal: false
+    Gyaml: BlockRengaItem
     Hash: !ul '9315367700996233102'
     InLinks:
       Create: !l '1'
@@ -9949,26 +10066,26 @@ root:
     - 0.0
   - AreaHash: !u '2992145499'
     Dynamic:
-      ChildActorSelectName: ObjectCoinYellow_All
-      ChildCreateAwaFlowerMoveDir: '0'
-      DirCheckFrame: '3'
-      InitItemMoveDir: '0'
-      IsHiddenEffect: 'False'
-      IsNoScatter: 'False'
-      IsSetSignal: 'False'
-    Gyaml: BlockHatena
+      ChildActorSelectName: ObjectCoinYellow_Single
+      ChildCreateAwaFlowerMoveDir: !l '0'
+      DirCheckFrame: !l '3'
+      InitItemMoveDir: !l '0'
+      IsHiddenEffect: false
+      IsNoScatter: false
+      IsSetSignal: false
+    Gyaml: BlockRengaItem
     Hash: !ul '2105507689732868207'
     Layer: PlayArea1
     Name: Course001_Main.muunt/obj1690
-    Rotate: !!python/tuple
+    Rotate:
     - 0.0
     - 0.0
     - 0.0
-    Scale: !!python/tuple
+    Scale:
     - 1.0
     - 1.0
     - 1.0
-    Translate: !!python/tuple
+    Translate:
     - 28.5
     - 6.5
     - 0.0

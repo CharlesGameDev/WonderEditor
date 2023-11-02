@@ -14,57 +14,68 @@ HOVER_TEXT_COLOR = QColor(255, 0, 0)
 GROUND_COLOR = QColor(0, 0, 255)
 DEFAULT_ACTOR_COLOR = QColor(255, 255, 255)
 
-ACTOR_COLORS = {
-    "EnemyKuribo": QColor(165, 42, 42), # goomba
-    "ObjectTalkingFlower": QColor(255, 165, 0), # talking flower
-    "ObjectTalkingFlowerS": QColor(255, 165, 0), # talking flower S
-    "ObjectDokan": QColor(0, 255, 0), # pipe
-    "ObjectCoinYellow": QColor(255, 255, 0), # gold coin
-    "ObjectCoinRandom": QColor(203, 195, 227), # flower coin
-    "ObjectBigTenLuckyCoin": QColor(128,0,128), # 10-flower coin
-    "BlockRenga": QColor(92, 64, 51), # brick block
-    "BlockRengaItem": QColor(112, 84, 71), # brick block w/ item
-    "BlockRengaLight": QColor(192, 164, 151), # breakable brick block
-    "BlockHatena": QColor(255, 255, 0), # ? block
-    "ObjectGoalPole": QColor(0, 128, 0), # goal pole
+ACTOR_ITEM = 0
+ACTOR_ENEMY = 1
+ACTOR_OBJECT = 2
+ACTOR_BLOCK = 3
+ACTOR_WORLD = 4
+ACTOR_AREA = 5
+ACTOR_MAP = 6
+
+ACTOR_IMAGES = {
+    "ObjectTalkingFlowerS": QImage("img/ObjectTalkingFlower.png"),
+    "BlockRengaLight": QImage("img/BlockRenga.png"),
+    "BlockRengaItem": QImage("img/BlockRenga.png"),
 }
 
-# gimmick actor list
-ACTOR_GIMMICK = [
-    "ItemKinoko",
-    "EnemyKuribo",
-    "ObjectTalkingFlower",
-    "ObjectTalkingFlowerS",
-    "ObjectGoalPole",
-    "ItemStar",
-    "ItemOneUpKinoko",
-    "ItemWonderHole",
-    "ItemWonderChip",
-    "ItemOffering",
-    "WorldMapDemoMotherWonderSeed",
-    "ObjectCoinYellow",
-    "ObjectCoinRandom",
-    "ObjectBigTenLuckyCoin",
-    "ObjectTreasureChest",
-    "ItemBalloon",
-    "ObjectGoalPole",
-    "BlockRenga",
-    "BlockHatena",
-    "ObjectBlockHardBreakable",
-    "ObjectBlockEndurance",
-    "ObjectDashFloor",
-    "ObjectBlockPole",
-    "ObjectBlockSurpriseYellow",
-    "ObjectBlockRaceStart",
-    "ObjectSoundBlinkBlock",
-    "ObjectTimerSwitchBlockSync",
-    "ObjectSinkBlock",
-    "ObjectAshibaDisappearStep",
-    "ObjectBlockLift",
-    "ObjectDokan",
-    "ObjectXylophoneBridge",
-    "AreaGelField",
-    "ObjectPropellerFlowerForCourse",
-    "ObjectBlockHotStone",
-    "ObjectGoQKun"
-]
+COMPILED_ACTOR_IMAGES = {}
+
+def get_actor_image(gyaml: str):
+    if gyaml in ACTOR_IMAGES:
+        return ACTOR_IMAGES[gyaml]
+    if gyaml not in COMPILED_ACTOR_IMAGES:
+        img = QImage(f"img/{gyaml}.png")
+        COMPILED_ACTOR_IMAGES[gyaml] = img
+        return img
+    return COMPILED_ACTOR_IMAGES[gyaml]
+
+ACTOR_NAMES = {
+    "ItemKinoko": "Super Mushroom",
+    "ItemStar": "Super Star",
+    "ItemOneUpKinoko": "1-Up Mushroom",
+    "ItemWonderHole": "Wonder Flower",
+    "ItemWonderChip": "Wonder Token",
+    "ItemOffering": "Wonder Seed",
+    "WorldMapDemoMotherWonderSeed": "Royal Seed",
+    "ObjectCoinYellow": "Coin",
+    "ObjectCoinRandom": "Flower Coin",
+    "ObjectMiniLuckyCoin": "Mini Flower Coin",
+    "ObjectBigTenLuckyCoin": "10-Flower Coin",
+    "ItemBalloon": "Item Balloon",
+    "ObjectGoalPole": "Goal Pole",
+    "ObjectCoinYellow": "Coin",
+    "BlockRenga": "Block",
+    "BlockHatena": "? Block",
+    "BlockClarity": "Invisible Block",
+    "ObjectBlockHardBreakable": "Hard Block",
+    "ObjectBlockEndurance": "Jewel Block",
+    "ObjectDashFloor": "Zip Track",
+    "ObjectBlockPole": "Pole Block",
+    "ObjectBlockSurpriseYellow": "! Block",
+    "ObjectBlockRaceStart": "Race Block",
+    "ObjectSoundBlinkBlock": "Rhythm Block",
+    "ObjectTimerSwitchBlockSync": "timer switch",
+    "ObjectSinkBlock": "Puffy Lift",
+    "ObjectAshibaDisappearStep": "Dropdown Countdown Lift",
+    "ObjectBlockLift": "Linking Lift",
+    "ObjectDokan": "pipe",
+    "ObjectXylophoneBridge": "Marimba Block",
+    "AreaGelField": "goo",
+    "ObjectPropellerFlowerForCourse": "Propeller Flower",
+    "ObjectBlockHotStone": "Hot-Hot Rock",
+    "ObjectGoQKun": "Downpour Cloud",
+    "EnemyKuribo": "Goomba",
+    "ObjectTalkingFlower": "Talking Flower",
+    "ObjectTalkingFlowerS": "Talking Flower (Sky)",
+    "AreaWaterBox": "Water",
+}

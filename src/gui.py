@@ -5,6 +5,7 @@ from tools import *
 from viewport import Viewport
 from level import Level
 from actor_selection import ActorSelection
+from add_actor import AddActor
 import yaml
 import info
 import sys
@@ -30,6 +31,8 @@ class Window(QMainWindow):
         self.viewport = Viewport(self)
         self.setCentralWidget(self.viewport)
 
+        self.viewport.setFocus()
+
         self.statusBar = QStatusBar()
         self.statusBar.showMessage(f"{info.NAME} | {info.VERSION} | {info.AUTHOR}", 100000)
         self.statusBar.setStyleSheet("color: white;")
@@ -37,7 +40,7 @@ class Window(QMainWindow):
 
         self.setup_menubar()
 
-        self.actor_selection = ActorSelection(self)
+        self.actor_selection = ActorSelection(self, self.viewport)
         self.addToolBar(Qt.RightToolBarArea, self.actor_selection)
 
         self.timer = QTimer(self)
@@ -50,6 +53,8 @@ class Window(QMainWindow):
         self.key_left = False
         self.key_up = False
         self.key_down = False
+
+        self.add_actor_window = AddActor(self)
 
         self.showMaximized()
         sys.exit(app.exec_())
@@ -127,12 +132,22 @@ class Window(QMainWindow):
         viewmenu.addAction(make_action("Actors", self, self.show_actors, "Alt+A", True, True))
         viewmenu.addAction(make_action("Actor Names", self, self.show_actor_names, "Alt+N", True, True))
         viewmenu.addSeparator()
-        viewmenu.addAction(make_action("Gimmick Actors", self, self.show_actor_gimmick, "Alt+G", True, True))
-        viewmenu.addAction(make_action("Other Actors", self, self.show_actor_other, "Alt+O", True, True))
+        viewmenu.addAction(make_action("Item Actors", self, self.show_actor_item, "Alt+I", True, True))
+        viewmenu.addAction(make_action("Enemy Actors", self, self.show_actor_enemy, "Alt+E", True, True))
+        viewmenu.addAction(make_action("Object Actors", self, self.show_actor_object, "Alt+O", True, True))
+        viewmenu.addAction(make_action("Block Actors", self, self.show_actor_block, "Alt+B", True, True))
+        viewmenu.addAction(make_action("World Actors", self, self.show_actor_world, "Alt+V", True, True))
+        viewmenu.addAction(make_action("Map Actors", self, self.show_actor_map, "Alt+M", True, True))
+        viewmenu.addAction(make_action("Other Actors", self, self.show_actor_other, "Alt+U", True, True))
+        
+        addmenu = QMenu("Add", self)
+        addmenu.setStyleSheet("background-color: gray;")
+        addmenu.addAction(make_action("Actor", self, self.add_actor, "Ctrl+Alt+A"))
 
         menubar.addMenu(fileMenu)
         menubar.addMenu(editMenu)
         menubar.addMenu(viewmenu)
+        menubar.addMenu(addmenu)
 
         self.setMenuBar(menubar)
 
@@ -141,6 +156,9 @@ class Window(QMainWindow):
             pos = event.pos()
             self.viewport.mouseMove(pos.x(), pos.y())
         return QMainWindow.eventFilter(self, source, event)
+    
+    def add_actor(self):
+        self.add_actor_window.show()
 
     def open(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open Map File (*.yaml)", "", "Map Files (*.yaml);;All Files (*)")
@@ -154,7 +172,7 @@ class Window(QMainWindow):
             return
 
         with open(fileName, 'r') as file:
-            data = yaml.load(file, Loader=yaml.BaseLoader)
+            data = yaml.load(file, Loader=yaml.Loader)
 
             self.viewport.set_level(Level(data))
 
@@ -164,7 +182,9 @@ class Window(QMainWindow):
         pass
 
     def save_as(self):
-        pass
+        fileName, _ = QFileDialog.getSaveFileName(self,"Save Map File (*.yaml)","","Map Files (*.yaml);;All Files (*)")
+        if fileName:
+            self.viewport.save_level(fileName)
 
     def undo(self):
         pass
@@ -205,8 +225,32 @@ class Window(QMainWindow):
         self.viewport.show_actor_names = show
         self.viewport.update()
 
-    def show_actor_gimmick(self, show: bool):
-        self.viewport.show_actor_gimmick = show
+    def show_actor_item(self, show: bool):
+        self.viewport.show_actor_item = show
+        self.viewport.update()
+
+    def show_actor_enemy(self, show: bool):
+        self.viewport.show_actor_enemy = show
+        self.viewport.update()
+
+    def show_actor_object(self, show: bool):
+        self.viewport.show_actor_object = show
+        self.viewport.update()
+
+    def show_actor_block(self, show: bool):
+        self.viewport.show_actor_block = show
+        self.viewport.update()
+
+    def show_actor_world(self, show: bool):
+        self.viewport.show_actor_world = show
+        self.viewport.update()
+
+    def show_actor_area(self, show: bool):
+        self.viewport.show_actor_area = show
+        self.viewport.update()
+
+    def show_actor_map(self, show: bool):
+        self.viewport.show_actor_map = show
         self.viewport.update()
 
     def show_actor_other(self, show: bool):
