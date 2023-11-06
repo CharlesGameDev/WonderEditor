@@ -26,9 +26,13 @@ class ActorSelection(QToolBar):
         self.nameLabel = self.make_input("", 14)
         self.gyamlLabel = self.make_input("No Actor Selected", 15)
 
-        self.make_label("Options", 15)
-        self.make_button("Show Visual", 15, self.show_visual)
-        self.make_button("Show Dynamic", 15, self.show_dynamic)
+        self.options_label = self.make_label("Options", 15)
+        self.visual_button = self.make_button("Show Visual", 15, self.show_visual)
+        self.dynamic_button = self.make_button("Show Dynamic", 15, self.show_dynamic)
+
+        self.options_label.setHidden(True)
+        self.visual_button.setHidden(True)
+        self.dynamic_button.setHidden(True)
 
         self.hashLabel = self.make_combo("Hash:", "", 10, self.visual)[0]
         self.areaHashLabel = self.make_combo("Area Hash:", "", 10, self.visual)[0]
@@ -60,6 +64,8 @@ class ActorSelection(QToolBar):
         self.make_button("Delete", 15, self.delete, self.visual)
         self.make_button("Apply Changes", 15, self.apply_changes, self.dynamic)
 
+        self.hide_all()
+
         self.dynamic_values = {}
 
     def show_visual(self):
@@ -69,6 +75,13 @@ class ActorSelection(QToolBar):
     def show_dynamic(self):
         self.set_children(self.visual_widget, False)
         self.set_children(self.dynamic_widget, True)
+
+    def hide_all(self):
+        self.set_children(self.visual_widget, False)
+        self.set_children(self.dynamic_widget, False)
+        self.visual_button.setHidden(True)
+        self.dynamic_button.setHidden(True)
+        self.options_label.setHidden(True)
 
     def set_children(self, parent, visible):
         for child in parent.children():
@@ -164,8 +177,13 @@ class ActorSelection(QToolBar):
         self.yrInput.setText(self.yrInput.accessibleName())
         self.zrInput.setText(self.zrInput.accessibleName())
 
+        self.hide_all()
+
     def update(self, hash):
         self.selected_actor = self.viewport.level.get_actor(hash)
+        if self.selected_actor == None:
+            self.set_default_values()
+            return
 
         self.nameLabel.setText(f"{self.selected_actor.get_name()}")
         self.gyamlLabel.setText(f"{self.selected_actor.get_gyaml()}")
@@ -184,6 +202,9 @@ class ActorSelection(QToolBar):
         self.xrInput.setText(f"{rotate.x}")
         self.yrInput.setText(f"{rotate.y}")
         self.zrInput.setText(f"{rotate.z}")
+        self.visual_button.setHidden(False)
+        self.dynamic_button.setHidden(False)
+        self.options_label.setHidden(True)
 
         for v in self.dynamic_values:
             self.dynamic.removeWidget(self.dynamic_values[v])

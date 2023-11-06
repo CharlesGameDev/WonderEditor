@@ -10,16 +10,19 @@ class Level:
         self.yaml = yaml
 
     def get_walls(self):
-        return self.yaml["root"]["BgUnits"][0]["Walls"]
+        if "BgUnits" in self.yaml["root"]:
+            if "Walls" in self.yaml["root"]["BgUnits"][0]:
+                return self.yaml["root"]["BgUnits"][0]["Walls"]
+        return None
 
     def set_walls(self, walls):
         self.yaml["root"]["BgUnits"][0]["Walls"] = walls
     
-    def get_actors(self, viewport, group=True):
+    def get_actors(self, viewport = None, group=True):
         actors = []
         for a in self.yaml["root"]["Actors"]:
             actor = Actor(a)
-            if group:
+            if group and viewport != None:
                 if actor.type == None and not viewport.show_actor_other: continue
                 if actor.type == ACTOR_ITEM and not viewport.show_actor_item: continue
                 if actor.type == ACTOR_ENEMY and not viewport.show_actor_enemy: continue
@@ -38,6 +41,21 @@ class Level:
             if actor["Hash"] == hash:
                 self.yaml["root"]["Actors"][i] = yaml
 
+    def add_actor(self, gyaml: str, name: str, position: Vector):
+        actor_yaml = {
+            "AreaHash": self.get_actors()[0].get_area_hash(),
+            "Gyaml": gyaml,
+            "Hash": random.randrange(0, 99999999999999999999),
+            "Layer": "PlayArea1",
+            "Name": name,
+            "Rotate": [0, 0, 0],
+            "Scale": [1, 1, 1],
+            "Translate": position.to_array(),
+        }
+        actor = Actor(actor_yaml)
+        self.yaml["root"]["Actors"].append(actor.to_yaml())
+        return actor
+
     def get_actor(self, hash):
         for a in self.yaml["root"]["Actors"]:
             if a["Hash"] == hash:
@@ -52,7 +70,7 @@ class Level:
         for a in self.yaml["root"]["Actors"]:
             if a["Hash"] == hash:
                 a2 = copy.copy(a)
-                a2["Hash"] = random.randrange(10000000000000000000, 99999999999999999999)
+                a2["Hash"] = random.randrange(0, 99999999999999999999)
                 a2["Name"] += "(2)"
                 translate = Vector(a2["Translate"])
                 translate.x += 2

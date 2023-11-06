@@ -1,10 +1,11 @@
+import typing
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from level import Level
 from vector import *
 from tools import *
-import math
 from info import *
 from actor_selection import ActorSelection
 
@@ -13,9 +14,10 @@ class Viewport(QWidget):
         self.parent = parent
         super().__init__(self.parent)
         self.level: Level = None
+        self.setMouseTracking(True)
         self.xoffset = 0
         self.yoffset = 75
-        self.scale = 6
+        self.scale = 8
         self.qp = QPainter()
         self.walls = []
         self.actors = []
@@ -30,6 +32,7 @@ class Viewport(QWidget):
         self.show_actor_world = True
         self.show_actor_block = True
         self.show_actor_map = True
+        self.show_actor_dv = True
         self.show_actor_other = True
         self.mx = 0
         self.my = 0
@@ -40,6 +43,12 @@ class Viewport(QWidget):
 
     def delete_actor(self, hash):
         self.level.remove_actor(hash)
+
+    def add_actor(self, gyaml, name):
+        if self.level == None: return
+        actor = self.level.add_actor(gyaml, name, Vector())
+        self.parent.actor_selection.select(actor.get_hash())
+        self.update()
 
     def duplicate_actor(self, hash, actor_selection):
         actor = self.level.duplicate_actor(hash)
@@ -57,6 +66,7 @@ class Viewport(QWidget):
         zr = float(actor_selection.zrInput.text())
         name = actor_selection.nameLabel.text()
         gyaml = actor_selection.gyamlLabel.text()
+        hash = actor_selection.hashLabel.text()
 
         translate = actor_selection.selected_actor.get_translate()
         translate.x = x
@@ -75,6 +85,7 @@ class Viewport(QWidget):
         actor_selection.selected_actor.set_rotate(rotate)
         actor_selection.selected_actor.set_name(name)
         actor_selection.selected_actor.set_gyaml(gyaml)
+        actor_selection.selected_actor.set_hash(hash)
 
         for dynamic in actor_selection.dynamic_values:
             layout = actor_selection.dynamic_values[dynamic]
@@ -84,6 +95,11 @@ class Viewport(QWidget):
             print(label.text(), actor_selection.selected_actor.get_dynamic()[label.text()])
 
         self.level.set_actor(actor_selection.selected_actor.get_hash(), actor_selection.selected_actor.to_yaml())
+
+    def find_and_select(self, name: str):
+        for actor in self.actors:
+            if actor.get_name() == name:
+                self.parent.actor_selection.select(actor.get_hash())
 
     def paintEvent(self, event: QPaintEvent | None = None) -> None:
         if self.level == None: return
@@ -107,12 +123,29 @@ class Viewport(QWidget):
         self.my = y
         self.update()
 
-    def mousePressEvent(self, event: QMouseEvent | None) -> None:
+    def mouseMoveEvent(self, event) -> None:
         if event.button() == Qt.LeftButton:
+            print("hi")
             for hash in self.hovering_actors:
                 if self.hovering_actors[hash]:
-                    self.parent.actor_selection.select(hash)
-            self.parent.actor_selection.clearFocus()
+                    actor = self.level.get_actor(hash)
+                    translate = Vector(actor.get_translate())
+                    translate.x = self.mx
+                    translate.y = self.my
+                    actor.set_translate(translate)
+                    self.level.set_actor(hash)
+
+    def mousePressEvent(self, event: QMouseEvent | None) -> None:
+        if event.button() == Qt.LeftButton:
+            selecting = []
+            for hash in self.hovering_actors:
+                if self.hovering_actors[hash]:
+                    selecting.append(hash)
+            if len(selecting) > 0:
+                hash = selecting[0]
+                self.parent.actor_selection.select(hash)
+                self.parent.actor_selection.clearFocus()
+                self.update()
 
     def makeHoveringActors(self):
         self.hovering_actors = {}
@@ -125,12 +158,13 @@ class Viewport(QWidget):
         self.actors = []
 
         walls = self.level.get_walls()
-        for external_rail in walls:
-            wall = []
-            for point in external_rail["ExternalRail"]["Points"]:
-                point = VectorInt(point["Translate"])
-                wall.append(point)
-            self.walls.append(wall)
+        if walls != None:
+            for external_rail in walls:
+                wall = []
+                for point in external_rail["ExternalRail"]["Points"]:
+                    point = Vector(point["Translate"])
+                    wall.append(point)
+                self.walls.append(wall)
 
         self.actors = self.level.get_actors(self)
 
@@ -138,16 +172,6 @@ class Viewport(QWidget):
         self.level.save(path)
 
     def drawCurrentPoints(self):
-        self.qp.setPen(GROUND_COLOR)
-
-        if self.show_walls:
-            for wall in self.walls:
-                last_point = None
-                for point in wall:
-                    if last_point != None:
-                        self.qp.drawLine((point.x + self.xoffset) * self.scale, (-point.y + self.yoffset) * self.scale, (last_point.x + self.xoffset) * self.scale, (-last_point.y + self.yoffset) * self.scale)
-                    last_point = point
-
         hover_text = ""
         if self.show_actors:
             for actor in self.actors:
@@ -157,10 +181,26 @@ class Viewport(QWidget):
                 if img:
                     self.qp.drawImage(rect, img)
                 self.qp.drawRect(rect)
-                if actor.get_hash() in self.hovering_actors:
-                    if self.show_actor_names and self.hovering_actors[actor.get_hash()]:
-                        hover_text += actor.get_gyaml() + "\n"
+                ahash = actor.get_hash()
+                if ahash in self.hovering_actors:
+                    if self.hovering_actors[ahash]:
+                        if self.show_actor_names:
+                            hover_text += actor.get_gyaml() + "\n"
+                        self.qp.fillRect(rect, QColor(255, 255, 255, 200))
+                selected = self.parent.actor_selection.selected_actor
+                if selected and selected.get_hash() == ahash:
+                    self.qp.fillRect(rect, QColor(255, 255, 255, 200))
 
-            if self.show_actor_names:
-                self.qp.setPen(HOVER_TEXT_COLOR)
-                self.qp.drawText(self.mx + 15, self.my, 500, 500, Qt.TextWordWrap, hover_text)
+        if self.show_walls:
+            self.qp.setPen(GROUND_COLOR)
+            for wall in self.walls:
+                last_point = None
+                for point in wall:
+                    if last_point != None:
+                        line = QLineF((point.x + self.xoffset) * self.scale, (-point.y + self.yoffset) * self.scale, (last_point.x + self.xoffset) * self.scale, (-last_point.y + self.yoffset) * self.scale)
+                        self.qp.drawLine(line)
+                    last_point = point
+
+        if self.show_actors and self.show_actor_names:
+            self.qp.setPen(HOVER_TEXT_COLOR)
+            self.qp.drawText(self.mx + 15, self.my, 500, 500, Qt.TextWordWrap, hover_text)

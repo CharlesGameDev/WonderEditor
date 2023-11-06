@@ -6,6 +6,7 @@ from viewport import Viewport
 from level import Level
 from actor_selection import ActorSelection
 from add_actor import AddActor
+from wall_editor import WallEditor
 import yaml
 import info
 import sys
@@ -54,7 +55,8 @@ class Window(QMainWindow):
         self.key_up = False
         self.key_down = False
 
-        self.add_actor_window = AddActor(self)
+        self.add_actor_window = AddActor(self, self.viewport)
+        self.wall_editor_window = WallEditor(self, self.viewport)
 
         self.showMaximized()
         sys.exit(app.exec_())
@@ -79,7 +81,10 @@ class Window(QMainWindow):
         if key in info.VIEWPORT_MOVE_LEFT: self.key_left = True
         if key in info.VIEWPORT_MOVE_UP: self.key_up = True
         if key in info.VIEWPORT_MOVE_DOWN: self.key_down = True
-    
+        if key in info.VIEWPORT_DELETE_OBJECT:
+            self.actor_selection.delete()
+            self.actor_selection.select("")
+
     def keyReleaseEvent(self, event: QKeyEvent | None) -> None:
         key = event.key()
         if key in info.VIEWPORT_MOVE_RIGHT: self.key_right = False
@@ -98,6 +103,10 @@ class Window(QMainWindow):
     def resizeEvent(self, event) -> None:
         self.no_stage_label.resize(self.size())
         self.viewport.resize(self.size())
+
+    def closeEvent(self, event):
+        self.add_actor_window.hide()
+        self.wall_editor_window.hide()
 
     def setup_menubar(self):
         menubar = QMenuBar(self)
@@ -136,12 +145,15 @@ class Window(QMainWindow):
         viewmenu.addAction(make_action("Object Actors", self, self.show_actor_object, "Alt+O", True, True))
         viewmenu.addAction(make_action("Block Actors", self, self.show_actor_block, "Alt+B", True, True))
         viewmenu.addAction(make_action("World Actors", self, self.show_actor_world, "Alt+V", True, True))
+        viewmenu.addAction(make_action("Area Actors", self, self.show_actor_area, "Alt+K", True, True))
         viewmenu.addAction(make_action("Map Actors", self, self.show_actor_map, "Alt+M", True, True))
+        viewmenu.addAction(make_action("DV Actors", self, self.show_actor_dv, "Alt+D", True, True))
         viewmenu.addAction(make_action("Other Actors", self, self.show_actor_other, "Alt+U", True, True))
         
         addmenu = QMenu("Add", self)
         addmenu.setStyleSheet("background-color: gray;")
         addmenu.addAction(make_action("Actor", self, self.add_actor, "Ctrl+Alt+A"))
+        addmenu.addAction(make_action("Walls", self, self.add_walls, "Ctrl+Alt+W"))
 
         menubar.addMenu(fileMenu)
         menubar.addMenu(editMenu)
@@ -158,6 +170,9 @@ class Window(QMainWindow):
     
     def add_actor(self):
         self.add_actor_window.show()
+
+    def add_walls(self):
+        self.wall_editor_window.show()
 
     def open(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open Map File (*.yaml)", "", "Map Files (*.yaml);;All Files (*)")
@@ -201,7 +216,11 @@ class Window(QMainWindow):
         pass
 
     def find(self):
-        pass
+        dialog = QInputDialog(self)
+        dialog.setStyleSheet("color: white;")
+        name, done = dialog.getText(dialog, "Find", "Find object by name:")
+        if done:
+            self.viewport.find_and_select(name)
 
     def replace(self):
         pass
@@ -250,6 +269,10 @@ class Window(QMainWindow):
 
     def show_actor_map(self, show: bool):
         self.viewport.show_actor_map = show
+        self.viewport.update()
+
+    def show_actor_dv(self, show: bool):
+        self.viewport.show_actor_dv = show
         self.viewport.update()
 
     def show_actor_other(self, show: bool):

@@ -16,6 +16,7 @@ class Actor:
         if gyaml.startswith("World"): self.type = ACTOR_WORLD
         if gyaml.startswith("Area"): self.type = ACTOR_AREA
         if gyaml.startswith("Map"): self.type = ACTOR_MAP
+        if gyaml.startswith("DV"): self.type = ACTOR_DV
 
     def get_dynamic(self):
         try:
@@ -34,6 +35,9 @@ class Actor:
     
     def get_hash(self):
         return self.yaml["Hash"]
+    
+    def set_hash(self, hash):
+        self.yaml["Hash"] = hash
     
     def get_area_hash(self):
         return self.yaml["AreaHash"]

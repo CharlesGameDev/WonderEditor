@@ -1,14 +1,16 @@
-from PyQt5.QtCore import QEvent, QObject
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from info import *
 from tools import resize_label
+from viewport import Viewport
+import random
 
 class AddActor(QMainWindow):
-    def __init__(self, window) -> None:
-        super().__init__()
+    def __init__(self, window, viewport: Viewport) -> None:
+        super().__init__(None, Qt.WindowStaysOnTopHint)
         self.window = window
+        self.viewport = viewport
         self.setStyleSheet("background-color: black; color: white;") 
         self.start_width = 800
         self.start_height = 600
@@ -83,6 +85,9 @@ class AddActor(QMainWindow):
 
     def add_actor(self):
         if self.selected == None: return
+        gyaml = self.right_label_small.text().replace("(", "").replace(")", "")
+        name = f"added_obj{random.randrange(1, 99999)}"
+        self.viewport.add_actor(gyaml, name)
         self.hide()
 
     def search_item(self):
