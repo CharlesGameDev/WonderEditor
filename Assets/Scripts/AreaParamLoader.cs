@@ -3,17 +3,22 @@ using System.IO;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
-public class LevelLoader : MonoBehaviour
+public class AreaParamLoader : MonoBehaviour
 {
-    public static LevelLoader Instance { get; private set; }
+    public static AreaParamLoader Instance { get; private set; }
 
-    public Level level;
-    public static Level Level => Instance.level;
+    public AreaParam ap;
+    public static AreaParam AP => Instance.ap;
     string filePath;
+    [SerializeField] GameObject loadedDisable;
+    [SerializeField] GameObject loadedEnable;
+    [SerializeField] AreaParamEditor editor;
 
     private void Awake()
     {
         Instance = this;
+        loadedDisable.SetActive(true);
+        loadedEnable.SetActive(false);
     }
 
     public void OpenFile()
@@ -33,14 +38,17 @@ public class LevelLoader : MonoBehaviour
             .WithTypeConverter(new LongConverter())
             .Build();
 
-        level = deserializer.Deserialize<Level>(yaml_content);
+        ap = deserializer.Deserialize<AreaParam>(yaml_content);
 
-        GameManager.Instance.UpdateVisuals(level);
+        loadedDisable.SetActive(false);
+        loadedEnable.SetActive(true);
+
+        editor.UpdateValues();
     }
 
     public void Save()
     {
-        if (level == null) return;
+        if (ap == null) return;
 
         var serializer = new SerializerBuilder()
             .WithIndentedSequences()
@@ -54,7 +62,7 @@ public class LevelLoader : MonoBehaviour
             .EnsureRoundtrip()
             .Build();
 
-        var yaml = serializer.Serialize(level);
+        var yaml = serializer.Serialize(ap);
         if (yaml == null) return;
         File.WriteAllText(filePath.Replace(".yaml", ".new.yaml"), yaml);
     }

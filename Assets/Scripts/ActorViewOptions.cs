@@ -23,7 +23,7 @@ public class ActorViewOptions : MonoBehaviour
         foreach (ActorDropdownItem item in items)
         {
             item.toggle.interactable = true;
-            item.toggle.isOn = ActorManager.Instance.ActorTypeObjects[item.label.text].activeSelf;
+            item.toggle.isOn = ActorManager.Instance.ActorTypeObjects[item.label.text].activeSelf;  
             item.toggle.onValueChanged.AddListener(on =>
             {
                 ActorManager.Instance.ActorTypeObjects[item.label.text].SetActive(on);
