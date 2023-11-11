@@ -8,7 +8,7 @@ public class ActorManager : Manager
 {
     public static ActorManager Instance { get; private set; }
 
-    Dictionary<string, Sprite> Sprites;
+    public Dictionary<string, Sprite> Sprites;
     public string[] ActorTypes;
     [SerializeField] bool[] ActorTypeVisibilityDefaults;
     public Dictionary<string, GameObject> ActorTypeObjects;
@@ -41,11 +41,67 @@ public class ActorManager : Manager
 
             yield return null;
         }
+    }
 
+    public void AddActor()
+    {
+        if (LevelLoader.Level == null) return;
+
+        PopupField.Instance.Show("Add Actor", "Actor GYAML", AddActorCallback);
+    }
+
+    public void AddActorCallback(string gyaml)
+    {
+        if (LevelLoader.Level == null) return;
+
+        Actor newActor = new()
+        {
+            AreaHash = LevelLoader.Level.root.RootAreaHash,
+            Name = LevelLoader.Level.root.Actors[0].Name + UnityEngine.Random.Range(1, 999999),
+            Hash = (ulong)UnityEngine.Random.Range(0, ulong.MaxValue),
+            Translate = Camera.main.ScreenToWorldPoint(Input.mousePosition).ToArray(),
+            Scale = Vector3.one.ToArray(),
+            Rotate = Vector3.zero.ToArray(),
+            Layer = "PlayArea1",
+            Gyaml = gyaml
+        };
+        newActor.Translate[2] = 0;
+
+        LevelLoader.Level.root.Actors.Add(newActor);
+        UpdateVisuals(LevelLoader.Level);
+    }
+
+    public void DuplicateActor(Actor actor)
+    {
+        Actor newActor = new()
+        {
+            AreaHash = actor.AreaHash,
+            Name = LevelLoader.Level.root.Actors[0].Name + UnityEngine.Random.Range(1, 999999),
+            Hash = (ulong)UnityEngine.Random.Range(0, ulong.MaxValue),
+            Translate = Camera.main.ScreenToWorldPoint(Input.mousePosition).ToArray(),
+            Scale = actor.Scale,
+            Rotate = actor.Rotate,
+            Layer = actor.Layer,
+            Gyaml = actor.Gyaml
+        };
+        newActor.Translate[2] = actor.Translate[2];
+
+        LevelLoader.Level.root.Actors.Add(newActor);
+        UpdateVisuals(LevelLoader.Level);
+    }
+
+    public void DeleteActor(Actor actor)
+    {
+        LevelLoader.Level.root.Actors.Remove(actor);
+        UpdateVisuals(LevelLoader.Level);
     }
 
     public override void UpdateVisuals(Level level)
     {
+        if (ActorTypeObjects != null)
+            foreach (var obj in ActorTypeObjects)
+                Destroy(obj.Value);
+
         ActorTypeObjects = new Dictionary<string, GameObject>();
         for (int i = 0; i < ActorTypes.Length; i++)
         {
@@ -76,20 +132,13 @@ public class ActorManager : Manager
             go.transform.localScale = actor.Scale.ToVector3();
             go.transform.localRotation = actor.Rotate.ToRotation();
 
+            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
+
             ActorView view = go.AddComponent<ActorView>();
             view.actor = actor;
 
-            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            Sprite s = Sprites["unknown"];
-            foreach (var sp in Sprites)
-            {
-                if (actor.Gyaml.Contains(sp.Value.name))
-                {
-                    s = sp.Value;
-                    break;
-                }
-            }
-            sr.sprite = s;
+            view.sr = sr;
+            view.UpdateSprite();
 
             go.AddComponent<BoxCollider2D>().isTrigger = true;
         }

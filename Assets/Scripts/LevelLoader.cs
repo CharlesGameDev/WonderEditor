@@ -1,13 +1,20 @@
 using SFB;
-using System;
 using System.IO;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
 public class LevelLoader : MonoBehaviour
 {
+    public static LevelLoader Instance { get; private set; }
+
     public Level level;
+    public static Level Level => Instance.level;
     string filePath;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void OpenFile()
     {
@@ -33,6 +40,8 @@ public class LevelLoader : MonoBehaviour
 
     public void Save()
     {
+        if (level == null) return;
+
         var serializer = new SerializerBuilder()
             .WithIndentedSequences()
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)

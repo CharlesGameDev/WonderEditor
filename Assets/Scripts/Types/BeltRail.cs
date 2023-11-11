@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public class BeltRail
 {
     public bool IsClosed;
-    public Point[] Points;
+    public List<Point> Points;
 }

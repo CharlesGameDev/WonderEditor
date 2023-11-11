@@ -36,7 +36,6 @@ public class CameraController : MonoBehaviour
         if (Input.GetMouseButton(2))
         {
             Vector3 delta = Input.mousePosition - lastPosition;
-            delta *= Time.deltaTime;
             float sens = mouseSensitivity * currentZoom;
             transform.Translate(delta.x * sens, delta.y * sens, 0);
             lastPosition = Input.mousePosition;

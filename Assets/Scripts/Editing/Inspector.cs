@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Inspector : MonoBehaviour
@@ -25,6 +24,19 @@ public class Inspector : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        nameInput.onValueChanged.AddListener(SetName);
+        gyamlInput.onValueChanged.AddListener(SetGyaml);
+        hashInput.onValueChanged.AddListener(SetHash);
+        areaHashInput.onValueChanged.AddListener(SetAreaHash);
+        translateXInput.onValueChanged.AddListener(SetTranslateX);
+        translateYInput.onValueChanged.AddListener(SetTranslateY);
+        translateZInput.onValueChanged.AddListener(SetTranslateZ);
+        scaleXInput.onValueChanged.AddListener(SetScaleX);
+        scaleYInput.onValueChanged.AddListener(SetScaleY);
+        scaleZInput.onValueChanged.AddListener(SetScaleZ);
+        rotateXInput.onValueChanged.AddListener(SetRotateX);
+        rotateYInput.onValueChanged.AddListener(SetRotateY);
+        rotateZInput.onValueChanged.AddListener(SetRotateZ);
         Hide();
     }
     
@@ -62,8 +74,44 @@ public class Inspector : MonoBehaviour
         }
     }
 
+    public void EditDynamicValues()
+    {
+        DynamicProperties.Instance.Show(selectedActor.actor);
+    }
+
     public void SetName(string v) => selectedActor.actor.Name = v;
-    public void SetGyaml(string v) => selectedActor.actor.Gyaml = v;
-    public void SetHash(string v) => selectedActor.actor.Hash = ulong.Parse(v);
-    public void SetAreaHash(string v) => selectedActor.actor.AreaHash = uint.Parse(v);
+    public void SetGyaml(string v)
+    {
+        selectedActor.actor.Gyaml = v;
+        selectedActor.UpdateSprite();
+    }
+
+    public void SetHash(string v) => ulong.TryParse(v, out selectedActor.actor.Hash);
+    public void SetAreaHash(string v) => uint.TryParse(v, out selectedActor.actor.AreaHash);
+
+    public void SetTranslateX(string v) => float.TryParse(v, out selectedActor.actor.Translate[0]);
+    public void SetTranslateY(string v) => float.TryParse(v, out selectedActor.actor.Translate[1]);
+    public void SetTranslateZ(string v) => float.TryParse(v, out selectedActor.actor.Translate[2]);
+
+    public void SetScaleX(string v) => float.TryParse(v, out selectedActor.actor.Scale[0]);
+    public void SetScaleY(string v) => float.TryParse(v, out selectedActor.actor.Scale[1]);
+    public void SetScaleZ(string v) => float.TryParse(v, out selectedActor.actor.Scale[2]);
+
+    public void SetRotateX(string v)
+    {
+        float.TryParse(v, out selectedActor.actor.Rotate[0]);
+        selectedActor.actor.Rotate[0] *= Mathf.Deg2Rad;
+    }
+
+    public void SetRotateY(string v)
+    {
+        float.TryParse(v, out selectedActor.actor.Rotate[1]);
+        selectedActor.actor.Rotate[1] *= Mathf.Deg2Rad;
+    }
+
+    public void SetRotateZ(string v)
+    {
+        float.TryParse(v, out selectedActor.actor.Rotate[2]);
+        selectedActor.actor.Rotate[2] *= Mathf.Deg2Rad;
+    }
 }

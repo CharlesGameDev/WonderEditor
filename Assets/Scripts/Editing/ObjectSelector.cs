@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class ObjectSelector : MonoBehaviour
@@ -5,10 +6,13 @@ public class ObjectSelector : MonoBehaviour
     public static ObjectSelector Instance { get; private set; }
     [SerializeField] ActorView currentSelected;
     [SerializeField] SpriteRenderer sr;
+    [SerializeField] TMP_Text selectedText;
+    Camera cam;
 
     private void Awake()
     {
         Instance = this;
+        cam = Camera.main;
     }
 
     public void SelectObject(ActorView view)
@@ -37,19 +41,31 @@ public class ObjectSelector : MonoBehaviour
     {
         if (currentSelected == null && Inspector.Instance.selectedActor == null)
         {
+            selectedText.text = "";
             transform.localScale = Vector3.zero;
         }
         else
         {
-            Transform t = null;
+            ActorView av = null;
             if (currentSelected != null)
-                t = currentSelected.transform;
+                av = currentSelected;
             else if (Inspector.Instance.selectedActor != null)
-                t = Inspector.Instance.selectedActor.transform;
+                av = Inspector.Instance.selectedActor;
 
-            sr.sprite = t.GetComponent<SpriteRenderer>().sprite;
-            transform.SetPositionAndRotation(t.position, t.rotation);
-            transform.localScale = t.localScale;
+            if (currentSelected != null)
+            {
+                string name = $"{currentSelected.actor.Name}\n{currentSelected.actor.Gyaml}";
+                selectedText.text = name;
+                selectedText.transform.position = cam.WorldToScreenPoint(av.transform.position);
+            } else
+                selectedText.text = "";
+
+            sr.sprite = av.GetComponent<SpriteRenderer>().sprite;
+            transform.SetPositionAndRotation(av.transform.position, av.transform.rotation);
+            transform.localScale = av.transform.localScale;
+
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D))
+                ActorManager.Instance.DuplicateActor(av.actor);
         }
     }
 }

@@ -14,7 +14,7 @@ public class Level
 public class Root
 {
     public ActorToRailLink[] ActorToRailLinks;
-    public Actor[] Actors;
+    public List<Actor> Actors;
     public BgUnit[] BgUnits;
     public Link[] Links;
     public Rail[] Rails;

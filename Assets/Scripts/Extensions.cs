@@ -17,9 +17,7 @@ public static class Extensions
     {
         float[] degrees = new float[array.Length];
         for (int i = 0; i < array.Length; i++)
-        {
             degrees[i] = Mathf.Rad2Deg * array[i];
-        }
 
         return degrees;
     }
@@ -53,10 +51,17 @@ public static class Extensions
         };
     }
 
+    public static Vector3 ToRadians(this Vector3 vector)
+    {
+        return new Vector3(
+            Mathf.Deg2Rad * vector.x,
+            Mathf.Deg2Rad * vector.y,
+            Mathf.Deg2Rad * vector.z
+        );
+    }
+
     public static float[] ToArrayRad(this Quaternion q)
     {
-        // ignore this because we want radians
-        Vector3 vector = q.ToEuler();
-        return vector.ToArray();
+        return q.eulerAngles.ToRadians().ToArray();
     }
 }

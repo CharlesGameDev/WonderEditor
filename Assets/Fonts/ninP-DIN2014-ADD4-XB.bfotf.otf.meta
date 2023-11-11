@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: a94da16dd5a0aca43b1a7cd1991616b8
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - ninP DIN2014 ADD4
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 811dec4374cb3f44583b4789fe099291, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

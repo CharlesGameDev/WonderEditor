@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class ActorView : MonoBehaviour
 {
     public Actor actor;
+    public SpriteRenderer sr;
     Camera cam;
 
     private void Awake()
@@ -15,6 +16,13 @@ public class ActorView : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         ObjectSelector.Instance.SelectObject(this);
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            ObjectSelector.Instance.DeselectObject(this);
+            ActorManager.Instance.DeleteActor(actor);
+            Destroy(gameObject);
+        }
     }
 
     private void OnMouseExit()
@@ -34,13 +42,27 @@ public class ActorView : MonoBehaviour
         Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
         pos = pos.PutOnGrid(4);
         pos.z = transform.position.z;
+        actor.Translate = pos.ToArray();
         transform.position = pos;
     }
 
     private void Update()
     {
-        actor.Translate = transform.position.ToArray();
-        actor.Scale = transform.localScale.ToArray();
-        actor.Rotate = transform.rotation.ToArrayRad();
+        transform.SetLocalPositionAndRotation(actor.Translate.ToVector3(), actor.Rotate.ToRotation());
+        transform.localScale = actor.Scale.ToVector3();
+    }
+
+    public void UpdateSprite()
+    {
+        Sprite s = ActorManager.Instance.Sprites["unknown"];
+        foreach (var sp in ActorManager.Instance.Sprites)
+        {
+            if (actor.Gyaml.Contains(sp.Value.name))
+            {
+                s = sp.Value;
+                break;
+            }
+        }
+        sr.sprite = s;
     }
 }

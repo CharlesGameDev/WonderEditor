@@ -13,9 +13,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdateVisuals(Level level)
     {
+        if (level == null) return;
+
         foreach (var manager in managers)
-        {
             manager.UpdateVisuals(level);
-        }
     }
 }
