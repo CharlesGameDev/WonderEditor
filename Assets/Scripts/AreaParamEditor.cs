@@ -7,10 +7,12 @@ using UnityEngine.UI;
 
 public class AreaParamEditor : MonoBehaviour
 {
+    [SerializeField] TMP_InputField BackGroundAreaType;
     [SerializeField] TMP_InputField BgmType;
     [SerializeField] TMP_InputField EnvSetName;
     [SerializeField] TMP_InputField EnvironmentSound;
     [SerializeField] TMP_InputField EnvironmentSoundEfx;
+    [SerializeField] TMP_InputField PlayerRhythmJumpBadgeTiming;
     [SerializeField] Toggle IsNotCallWaterEnvSE;
     [SerializeField] TMP_InputField WonderBgmStartOffset;
     [SerializeField] TMP_InputField WonderBgmType;
@@ -25,11 +27,13 @@ public class AreaParamEditor : MonoBehaviour
     public void UpdateValues()
     {
         AreaParam.Root r = AreaParamLoader.Instance.ap.root;
-        
+
+        BackGroundAreaType.text = r.BackGroundAreaType;
         BgmType.text = r.BgmType;
         EnvSetName.text = r.EnvSetName;
         EnvironmentSound.text = r.EnvironmentSound;
         EnvironmentSoundEfx.text = r.EnvironmentSoundEfx;
+        PlayerRhythmJumpBadgeTiming.text = r.PlayerRhythmJumpBadgeTiming;
         IsNotCallWaterEnvSE.isOn = r.IsNotCallWaterEnvSE;
         WonderBgmStartOffset.text = r.WonderBgmStartOffset.ToString();
         WonderBgmType.text = r.WonderBgmType;
@@ -55,7 +59,7 @@ public class AreaParamEditor : MonoBehaviour
         for (int i = 0; i < paletteListParent.childCount; i++)
             Destroy(paletteListParent.GetChild(i).gameObject);
 
-        if (r.EnvPaletteSetting.WonderPaletteList == null) r.EnvPaletteSetting.WonderPaletteList = new List<string>();
+        r.EnvPaletteSetting.WonderPaletteList ??= new List<string>();
 
         for (int i = 0; i < r.EnvPaletteSetting.WonderPaletteList.Count; i++)
         {

@@ -8,6 +8,7 @@ public class WallPoint : MonoBehaviour
     public int lrIndex;
     public BgUnit bgu;
     public LineRenderer lineRenderer;
+    public int type;
     Camera cam;
     SpriteRenderer sr;
     Color normalColor;

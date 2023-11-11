@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -20,8 +21,12 @@ public class DynamicProperties : MonoBehaviour
     public void ApplyChanges()
     {
         actor.Dynamic = new Dictionary<string, object>(values);
-        Debug.Log(actor.Name);
-        Debug.Log(actor.Dynamic["ChildActorSelectName"]);
+    }
+
+    public void AddNewProperty()
+    {
+        values.Add("NewProperty", "Value");
+        CreateProp("NewProperty", "Value");
     }
 
     public void Show(Actor actor)
@@ -39,21 +44,41 @@ public class DynamicProperties : MonoBehaviour
 
         foreach (var item in actor.Dynamic)
         {
-            GameObject go = Instantiate(propertyPrefab, properties);
-            go.GetComponentInChildren<TMP_Text>().text = item.Key;
-            TMP_InputField field = go.GetComponentInChildren<TMP_InputField>();
-            field.text = item.Value.ToString();
-
-            field.onValueChanged.AddListener(value =>
-            {
-                SetProperty(item.Key, value);
-            });
+            CreateProp(item.Key, item.Value.ToString());
         }
+    }
+
+    void CreateProp(string key, string value)
+    {
+        GameObject go = Instantiate(propertyPrefab, properties);
+        TMP_InputField[] fields = go.GetComponentsInChildren<TMP_InputField>();
+        
+        TMP_InputField nameField = fields[0];
+        nameField.text = key;
+        nameField.name = key;
+
+        nameField.onValueChanged.AddListener(value =>
+        {
+            SetPropertyName(nameField.name, value);
+            nameField.name = value;
+        });
+
+        TMP_InputField field = fields[1];
+        field.text = value.ToString();
+
+        field.onValueChanged.AddListener(value =>
+        {
+            SetProperty(key, value);
+        });
+    }
+
+    public void SetPropertyName(string key, string value)
+    {
+        values.ChangeKey(key, value);
     }
 
     public void SetProperty(string key, string value)
     {
-        Debug.Log($"{key}: {value}");
         values[key] = value;
     }
 }

@@ -1,7 +1,9 @@
+using Nintendo.Byml;
 using SFB;
 using System.IO;
 using UnityEngine;
 using YamlDotNet.Serialization;
+using ZstdSharp;
 
 public class LevelLoader : MonoBehaviour
 {
@@ -18,11 +20,25 @@ public class LevelLoader : MonoBehaviour
 
     public void OpenFile()
     {
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open .yaml", "", "yaml", false);
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open .yaml or .zs", "", new ExtensionFilter[] { new(".yaml"), new(".zs") }, false);
         if (paths.Length == 0) return;
 
         filePath = paths[0];
-        var yaml_content = File.ReadAllText(filePath);
+
+        var yaml_content = "";
+        if (filePath.EndsWith("yaml"))
+            yaml_content = File.ReadAllText(filePath);
+        else if (filePath.EndsWith("zs"))
+        {
+            var data = File.ReadAllBytes(filePath);
+            using var decompressor = new Decompressor();
+            var decompressedData = decompressor.Unwrap(data).ToArray();
+
+            BymlFile file = new BymlFile(decompressedData);
+            yaml_content = file.ToYaml();
+        }
+
+        if (yaml_content == "") return;
 
         var deserializer = new DeserializerBuilder()
             .WithTagMapping("!ul", typeof(ulong))
@@ -41,6 +57,7 @@ public class LevelLoader : MonoBehaviour
     public void Save()
     {
         if (level == null) return;
+        if (filePath == "") return;
 
         var serializer = new SerializerBuilder()
             .WithIndentedSequences()
@@ -55,7 +72,6 @@ public class LevelLoader : MonoBehaviour
             .Build();
 
         var yaml = serializer.Serialize(level);
-        if (yaml == null) return;
         File.WriteAllText(filePath.Replace(".yaml", ".new.yaml"), yaml);
     }
 }

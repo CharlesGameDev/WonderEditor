@@ -6,11 +6,13 @@ public class AreaParam
     [System.Serializable]
     public class Root
     {
+        public string BackGroundAreaType;
         public string BgmType;
         public EnvPaletteSetting EnvPaletteSetting;
         public string EnvSetName;
         public string EnvironmentSound;
         public string EnvironmentSoundEfx;
+        public string PlayerRhythmJumpBadgeTiming;
         public bool IsNotCallWaterEnvSE;
         public SkinParam SkinParam;
         public float WonderBgmStartOffset;

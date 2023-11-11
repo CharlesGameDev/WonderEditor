@@ -17,6 +17,8 @@ public class BgUnitManager : Manager
     [SerializeField] WallPoint wallPointPrefab;
     LineRenderer[] wallRenderers;
     List<WallPoint> wallPoints;
+    LineRenderer[] beltRailRenderers;
+    List<WallPoint> beltRailPoints;
     GameObject wallObject;
     GameObject beltRailsObject;
 
@@ -34,12 +36,7 @@ public class BgUnitManager : Manager
                 beltRailsObject = new("Belt Rails");
                 beltRailsObject.transform.SetParent(transform);
 
-                foreach (BeltRail br in bgu.BeltRails)
-                {
-                    Color c = beltRailColor;
-                    if (!br.IsClosed) c = beltRailColorNotClosed;
-                    CreateWall(br, beltRailsObject.transform, c);
-                }
+                UpdateBeltRailRenderers(bgu);
             }
             if (doWalls && bgu.Walls != null)
             {
@@ -81,7 +78,43 @@ public class BgUnitManager : Manager
                 wp.lrIndex = i1;
                 wp.bgu = bgu;
                 wp.point = p;
+                wp.type = 1;
                 wallPoints.Add(wp);
+            }
+        }
+    }
+
+    void UpdateBeltRailRenderers(BgUnit bgu)
+    {
+        if (beltRailRenderers != null)
+            foreach (LineRenderer lr in beltRailRenderers)
+                Destroy(lr.gameObject);
+        if (beltRailPoints != null)
+            foreach (WallPoint wp in beltRailPoints)
+                Destroy(wp.gameObject);
+
+        beltRailRenderers = new LineRenderer[bgu.BeltRails.Length];
+        beltRailPoints = new List<WallPoint>();
+
+        for (int i1 = 0; i1 < bgu.BeltRails.Length; i1++)
+        {
+            BeltRail br = bgu.BeltRails[i1];
+            Color c = beltRailColor;
+            if (!br.IsClosed) c = beltRailColorNotClosed;
+            LineRenderer lr = CreateWall(br, beltRailsObject.transform, c);
+            beltRailRenderers[i1] = lr;
+
+            for (int i = 0; i < br.Points.Count; i++)
+            {
+                Point p = br.Points[i];
+                WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity);
+                wp.lineIndex = i;
+                wp.lineRenderer = lr;
+                wp.lrIndex = i1;
+                wp.bgu = bgu;
+                wp.point = p;
+                wp.type = 0;
+                beltRailPoints.Add(wp);
             }
         }
     }
@@ -95,8 +128,16 @@ public class BgUnitManager : Manager
 
     public void RemoveWall(WallPoint wp)
     {
-        wp.bgu.Walls[wp.lrIndex].ExternalRail.Points.RemoveAt(wp.lineIndex);
-        UpdateWallRenderers(wp.bgu);
+        if (wp.type == 0)
+        {
+            wp.bgu.BeltRails[wp.lrIndex].Points.RemoveAt(wp.lineIndex);
+            UpdateBeltRailRenderers(wp.bgu);
+        }
+        else if (wp.type == 1)
+        {
+            wp.bgu.Walls[wp.lrIndex].ExternalRail.Points.RemoveAt(wp.lineIndex);
+            UpdateWallRenderers(wp.bgu);
+        }
     }
 
     void AddWallCallback(string value)

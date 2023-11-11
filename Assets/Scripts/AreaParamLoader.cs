@@ -1,7 +1,9 @@
+using Nintendo.Byml;
 using SFB;
 using System.IO;
 using UnityEngine;
 using YamlDotNet.Serialization;
+using ZstdSharp;
 
 public class AreaParamLoader : MonoBehaviour
 {
@@ -23,11 +25,21 @@ public class AreaParamLoader : MonoBehaviour
 
     public void OpenFile()
     {
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open .yaml", "", "yaml", false);
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open .yaml or .bgyml", "", new ExtensionFilter[] { new(".yaml"), new(".bgyml") }, false);
         if (paths.Length == 0) return;
-
         filePath = paths[0];
-        var yaml_content = File.ReadAllText(filePath);
+
+        var yaml_content = "";
+        if (filePath.EndsWith("yaml"))
+            yaml_content = File.ReadAllText(filePath);
+        else if (filePath.EndsWith(".bgyml"))
+        {
+            var data = File.ReadAllBytes(filePath);
+            BymlFile file = new(data);
+            yaml_content = file.ToYaml();
+        }
+
+        if (yaml_content == "") return;
 
         var deserializer = new DeserializerBuilder()
             .WithTagMapping("!ul", typeof(ulong))

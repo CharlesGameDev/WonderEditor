@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Extensions
@@ -63,5 +64,15 @@ public static class Extensions
     public static float[] ToArrayRad(this Quaternion q)
     {
         return q.eulerAngles.ToRadians().ToArray();
+    }
+
+    public static bool ChangeKey<TKey, TValue>(this IDictionary<TKey, TValue> dict,
+                                               TKey oldKey, TKey newKey)
+    {
+        if (!dict.Remove(oldKey, out TValue value))
+            return false;
+
+        dict[newKey] = value;
+        return true;
     }
 }
