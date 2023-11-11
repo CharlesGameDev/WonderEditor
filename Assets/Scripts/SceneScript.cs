@@ -20,4 +20,14 @@ public class SceneScript : MonoBehaviour
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(sceneName);
     }
+
+    public void OpenURL(string url)
+    {
+        Application.OpenURL(url);
+    }
+
+    public void Close()
+    {
+        Application.Quit();
+    }
 }
