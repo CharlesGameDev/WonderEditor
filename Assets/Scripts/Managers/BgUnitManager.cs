@@ -122,6 +122,7 @@ public class BgUnitManager : Manager
     public void AddWall()
     {
         if (LevelLoader.Level == null) return;
+        if (PopupField.Instance == null) return;
 
         PopupField.Instance.Show("Wall Index", "Number", AddWallCallback);
     }

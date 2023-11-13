@@ -46,6 +46,7 @@ public class ActorManager : Manager
     public void AddActor()
     {
         if (LevelLoader.Level == null) return;
+        if (PopupField.Instance == null) return;
 
         PopupField.Instance.Show("Add Actor", "Actor GYAML", AddActorCallback);
     }
