@@ -6114,7 +6114,7 @@ Transform:
   m_GameObject: {fileID: 582179108}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -13840,7 +13840,7 @@ MonoBehaviour:
   beltRailColorNotClosed: {r: 1, g: 0.95441294, b: 0, a: 1}
   wallColor: {r: 0.05000019, g: 0, b: 1, a: 1}
   wallColorNotClosed: {r: 1, g: 0, b: 0, a: 1}
-  doBeltRails: 1
+  doBeltRails: 0
   doWalls: 1
   wallPointPrefab: {fileID: 2757892162828669874, guid: cd8e5520662fd1a47b211ef8ed95e0a8, type: 3}
 --- !u!1 &1426179104
