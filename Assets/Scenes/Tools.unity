@@ -705,9 +705,9 @@ RectTransform:
   - {fileID: 1350165487}
   m_Father: {fileID: 1068076805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 225}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 250, y: 70}
   m_SizeDelta: {x: 430, y: 118}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &633900296
@@ -1177,8 +1177,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 156.35889}
-  m_SizeDelta: {x: 0, y: -312.7178}
+  m_AnchoredPosition: {x: 0, y: 80.557}
+  m_SizeDelta: {x: 0, y: -161.113}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1051514934
 MonoBehaviour:
@@ -1200,10 +1200,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'There''s a new version of Wondertools available.
+  m_text: 'There''s a new version of Wondertools available. Would you like to download
+    it?
 
-    Would you like to
-    download it?'
+
+    {0} -> {1}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4ff6e61d345936043b228719e59e3d3b, type: 2}
   m_sharedMaterial: {fileID: -559817630892308667, guid: 4ff6e61d345936043b228719e59e3d3b, type: 2}
@@ -1230,12 +1231,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 69.6
+  m_fontSize: 49
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 0
-  m_fontSizeMax: 72
+  m_fontSizeMax: 85.4
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -2360,6 +2361,7 @@ MonoBehaviour:
   creditsText: {fileID: 145831242}
   soundSource: {fileID: 1641299407}
   downloadPopupBox: {fileID: 1068076804}
+  downloadPopupText: {fileID: 1051514934}
 --- !u!82 &1641299407
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2491,9 +2493,9 @@ RectTransform:
   - {fileID: 2055112097}
   m_Father: {fileID: 1068076805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 88}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -250, y: 70}
   m_SizeDelta: {x: 430, y: 118}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1654690989

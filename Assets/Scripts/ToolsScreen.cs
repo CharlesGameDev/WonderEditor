@@ -11,6 +11,7 @@ public class ToolsScreen : MonoBehaviour
     [SerializeField] TMP_Text creditsText;
     [SerializeField] AudioSource soundSource;
     [SerializeField] GameObject downloadPopupBox;
+    [SerializeField] TMP_Text downloadPopupText;
 
     private IEnumerator Start()
     {
@@ -22,8 +23,10 @@ public class ToolsScreen : MonoBehaviour
         yield return new WaitUntil(() => t.IsCompleted);
 
         Release release = t.Result[0];
-        if (release.Name != Application.version)
+        if (release.Name != Application.version) {
             downloadPopupBox.SetActive(true);
+            downloadPopupText.text = string.Format(downloadPopupText.text, Application.version, release.Name);
+        }
     }
 
     public void PlaySound(AudioClip clip)
