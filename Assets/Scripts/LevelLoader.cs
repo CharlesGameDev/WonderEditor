@@ -12,10 +12,13 @@ public class LevelLoader : MonoBehaviour
     public Level level;
     public static Level Level => Instance.level;
     string filePath;
+    string savePath;
+    public bool levelIsLoaded;
 
     private void Awake()
     {
         Instance = this;
+        levelIsLoaded = false;
     }
 
     public void OpenFile()
@@ -34,7 +37,7 @@ public class LevelLoader : MonoBehaviour
             using var decompressor = new Decompressor();
             var decompressedData = decompressor.Unwrap(data).ToArray();
 
-            BymlFile file = new BymlFile(decompressedData);
+            BymlFile file = new(decompressedData);
             yaml_content = file.ToYaml();
         }
 
@@ -51,7 +54,9 @@ public class LevelLoader : MonoBehaviour
 
         level = deserializer.Deserialize<Level>(yaml_content);
 
+        savePath = filePath.Replace(".yaml", ".new.yaml");
         GameManager.Instance.UpdateVisuals(level);
+        levelIsLoaded = true;
     }
 
     public void Save()
@@ -72,6 +77,11 @@ public class LevelLoader : MonoBehaviour
             .Build();
 
         var yaml = serializer.Serialize(level);
-        File.WriteAllText(filePath.Replace(".yaml", ".new.yaml"), yaml);
+        File.WriteAllText(savePath, yaml);
+    }
+
+    public void New()
+    {
+
     }
 }

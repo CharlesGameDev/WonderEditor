@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using TMPro;
 using UnityEngine;
 
@@ -5,8 +6,9 @@ public class ObjectSelector : MonoBehaviour
 {
     public static ObjectSelector Instance { get; private set; }
     [SerializeField] ActorView currentSelected;
+    [SerializeField] WallPoint currentSelectedWall;
     [SerializeField] SpriteRenderer sr;
-    [SerializeField] TMP_Text selectedText;
+    public TMP_Text selectedText;
     Camera cam;
 
     private void Awake()
@@ -30,6 +32,21 @@ public class ObjectSelector : MonoBehaviour
         currentSelected = null;
     }
 
+    public void SelectWall(WallPoint wp)
+    {
+        if (wp == null) return;
+
+        DeselectWall(wp);
+        currentSelectedWall = wp;
+    }
+
+    public void DeselectWall(WallPoint wp)
+    {
+        if (wp == null || wp != currentSelectedWall) return;
+
+        currentSelectedWall = null;
+    }
+
     public void ClickObject(ActorView view)
     {
         if (view == null) return;
@@ -39,33 +56,44 @@ public class ObjectSelector : MonoBehaviour
 
     private void Update()
     {
-        if (currentSelected == null && Inspector.Instance.selectedActor == null)
+        if (currentSelected == null && currentSelectedWall == null && Inspector.Instance.selectedActor == null)
         {
             selectedText.text = "";
             transform.localScale = Vector3.zero;
         }
         else
         {
+            selectedText.text = "";
+
             ActorView av = null;
             if (currentSelected != null)
                 av = currentSelected;
             else if (Inspector.Instance.selectedActor != null)
                 av = Inspector.Instance.selectedActor;
-
-            if (currentSelected != null)
+            if (av != null)
             {
-                string name = $"{currentSelected.actor.Name}\n{currentSelected.actor.Gyaml}";
-                selectedText.text = name;
-                selectedText.transform.position = cam.WorldToScreenPoint(av.transform.position);
-            } else
-                selectedText.text = "";
+                if (currentSelected != null)
+                {
+                    string name = $"{currentSelected.actor.Name}\n{currentSelected.actor.Gyaml}";
+                    selectedText.text = name;
+                    selectedText.transform.position = cam.WorldToScreenPoint(av.transform.position);
+                } else
+                    selectedText.text = "";
 
-            sr.sprite = av.GetComponent<SpriteRenderer>().sprite;
-            transform.SetPositionAndRotation(av.transform.position, av.transform.rotation);
-            transform.localScale = av.transform.localScale;
+                sr.sprite = av.GetComponent<SpriteRenderer>().sprite;
+                transform.SetPositionAndRotation(av.transform.position, av.transform.rotation);
+                transform.localScale = av.transform.localScale;
 
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D))
-                ActorManager.Instance.DuplicateActor(av.actor);
+                if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D))
+                    ActorManager.Instance.DuplicateActor(av.actor);
+            }
+
+            if (currentSelectedWall != null)
+            {
+                selectedText.transform.position = cam.WorldToScreenPoint(currentSelectedWall.transform.position);
+                Vector3 pos = currentSelectedWall.transform.position;
+                selectedText.text += $"Wall Group: {currentSelectedWall.lrIndex}\nWall Index: {currentSelectedWall.lineIndex}\nType: {currentSelectedWall.type}\nX: {pos.x}, Y: {pos.y}";
+            }
         }
     }
 }

@@ -18,12 +18,14 @@ public class ActorViewOptions : MonoBehaviour
 
     void UpdateOptions_()
     {
+        if (ActorManager.Instance == null) return;
+
         ActorDropdownItem[] items = dropdown.GetComponentsInChildren<ActorDropdownItem>(false);
 
         foreach (ActorDropdownItem item in items)
         {
             item.toggle.interactable = true;
-            item.toggle.isOn = ActorManager.Instance.ActorTypeObjects[item.label.text].activeSelf;  
+            item.toggle.isOn = ActorManager.Instance.ActorTypeObjects[item.label.text].activeSelf;
             item.toggle.onValueChanged.AddListener(on =>
             {
                 ActorManager.Instance.ActorTypeObjects[item.label.text].SetActive(on);

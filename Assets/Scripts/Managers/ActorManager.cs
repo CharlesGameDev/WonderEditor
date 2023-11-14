@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ActorManager : Manager
@@ -18,43 +20,25 @@ public class ActorManager : Manager
         Instance = this;
     }
 
-    public IEnumerator ILoadImages(Action<int, int, string> completedCallback)
+    void Start()
     {
         Sprites = new Dictionary<string, Sprite>();
 
-        string folderPath = Application.streamingAssetsPath + "/Icons";
-        string[] filePaths = Directory.GetFiles(folderPath, "*.png");
-        for (int i = 0; i < filePaths.Length; i++)
+        foreach (Sprite sprite in Resources.LoadAll<Sprite>("Icons"))
         {
-            string path = filePaths[i];
-            string name = Path.GetFileNameWithoutExtension(path);
-
-            byte[] pngBytes = File.ReadAllBytes(path);
-            Texture2D tex = new(2, 2);
-            tex.LoadImage(pngBytes);
-
-            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), tex.height);
-            sprite.name = name;
-            Sprites.Add(name, sprite);
-
-            completedCallback.Invoke(i, filePaths.Length, name);
-
-            yield return null;
+            Sprites.Add(sprite.name, sprite);
         }
     }
 
     public void AddActor()
     {
-        if (LevelLoader.Level == null) return;
-        if (PopupField.Instance == null) return;
+        if (!LevelLoader.Instance.levelIsLoaded) return;
 
-        PopupField.Instance.Show("Add Actor", "Actor GYAML", AddActorCallback);
+        PopupField.Instance.Show("Add Actor", "", "Actor GYAML", AddActorCallback);
     }
 
-    public void AddActorCallback(string gyaml)
+    public void AddActorCallback(string[] gyaml)
     {
-        if (LevelLoader.Level == null) return;
-
         Actor newActor = new()
         {
             AreaHash = LevelLoader.Level.root.RootAreaHash,
@@ -64,7 +48,7 @@ public class ActorManager : Manager
             Scale = Vector3.one.ToArray(),
             Rotate = Vector3.zero.ToArray(),
             Layer = "PlayArea1",
-            Gyaml = gyaml
+            Gyaml = gyaml[0]
         };
         newActor.Translate[2] = 0;
 
@@ -91,10 +75,10 @@ public class ActorManager : Manager
         UpdateVisuals(LevelLoader.Level);
     }
 
-    public void DeleteActor(Actor actor)
+    public void DeleteActor(ActorView av)
     {
-        LevelLoader.Level.root.Actors.Remove(actor);
-        UpdateVisuals(LevelLoader.Level);
+        LevelLoader.Level.root.Actors.Remove(av.actor);
+        Destroy(av.gameObject);
     }
 
     public override void UpdateVisuals(Level level)
@@ -141,7 +125,8 @@ public class ActorManager : Manager
             view.sr = sr;
             view.UpdateSprite();
 
-            go.AddComponent<BoxCollider2D>().isTrigger = true;
+            PolygonCollider2D c = go.AddComponent<PolygonCollider2D>();
+            c.isTrigger = true;
         }
     }
 }

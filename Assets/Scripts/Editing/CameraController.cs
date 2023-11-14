@@ -43,6 +43,9 @@ public class CameraController : MonoBehaviour
 
         float scroll = Input.mouseScrollDelta.y * scrollSpeed;
         rawZoom += scroll;
+        if (rawZoom > -1)
+            rawZoom = -1;
+
         currentZoom = Mathf.Lerp(currentZoom, rawZoom, zoomLerp * Time.deltaTime);
 
         // transform.position = new Vector3(transform.position.x, transform.position.y, currentZoom);

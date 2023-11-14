@@ -2,21 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DynamicProperties : MonoBehaviour
 {
-    public static DynamicProperties Instance { get; private set; }
+    private static DynamicProperties _instance;
+    public static DynamicProperties Instance
+    {
+        get
+        {
+            if (_instance == null) return _instance = FindAnyObjectByType<DynamicProperties>(FindObjectsInactive.Include);
+            return _instance;
+        }
+    }
 
-    [SerializeField] GameObject propertyPrefab;
+    [SerializeField] DynamicPropertyField propertyPrefab;
     [SerializeField] Transform properties;
     Dictionary<string, object> values;
     Actor actor;
-
-    private void Awake()
-    {
-        Instance = this;
-        gameObject.SetActive(false);
-    }
 
     public void ApplyChanges()
     {
@@ -44,16 +47,15 @@ public class DynamicProperties : MonoBehaviour
 
         foreach (var item in actor.Dynamic)
         {
-            CreateProp(item.Key, item.Value.ToString());
+            CreateProp(item.Key, item.Value);
         }
     }
 
-    void CreateProp(string key, string value)
+    void CreateProp(string key, object value)
     {
-        GameObject go = Instantiate(propertyPrefab, properties);
-        TMP_InputField[] fields = go.GetComponentsInChildren<TMP_InputField>();
+        DynamicPropertyField pfield = Instantiate(propertyPrefab, properties);
         
-        TMP_InputField nameField = fields[0];
+        TMP_InputField nameField = pfield.field1;
         nameField.text = key;
         nameField.name = key;
 
@@ -63,13 +65,30 @@ public class DynamicProperties : MonoBehaviour
             nameField.name = value;
         });
 
-        TMP_InputField field = fields[1];
-        field.text = value.ToString();
-
-        field.onValueChanged.AddListener(value =>
+        if (bool.TryParse(value.ToString(), out bool v))
         {
-            SetProperty(key, value);
-        });
+            Toggle toggle = pfield.field2Toggle;
+            toggle.isOn = v;
+
+            toggle.onValueChanged.AddListener(value =>
+            {
+                SetProperty(key, value);
+            });
+
+            toggle.gameObject.SetActive(true);
+        }
+        else
+        {
+            TMP_InputField field = pfield.field2Text;
+            field.text = value.ToString();
+
+            field.onValueChanged.AddListener(value =>
+            {
+                SetProperty(key, value);
+            });
+
+            field.gameObject.SetActive(true);
+        }
     }
 
     public void SetPropertyName(string key, string value)
@@ -77,7 +96,7 @@ public class DynamicProperties : MonoBehaviour
         values.ChangeKey(key, value);
     }
 
-    public void SetProperty(string key, string value)
+    public void SetProperty(string key, object value)
     {
         values[key] = value;
     }

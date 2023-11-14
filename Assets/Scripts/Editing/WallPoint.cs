@@ -6,9 +6,9 @@ public class WallPoint : MonoBehaviour
     public Point point;
     public int lineIndex;
     public int lrIndex;
-    public BgUnit bgu;
+    public int bguIndex;
+    public WallType type;
     public LineRenderer lineRenderer;
-    public int type;
     Camera cam;
     SpriteRenderer sr;
     Color normalColor;
@@ -32,11 +32,13 @@ public class WallPoint : MonoBehaviour
     private void OnMouseEnter()
     {
         sr.color = hoverColor;
+        ObjectSelector.Instance.SelectWall(this);
     }
 
     private void OnMouseExit()
     {
         sr.color = normalColor;
+        ObjectSelector.Instance.DeselectWall(this);
     }
 
     private void OnMouseDrag()

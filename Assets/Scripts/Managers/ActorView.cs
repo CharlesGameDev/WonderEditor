@@ -20,7 +20,7 @@ public class ActorView : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             ObjectSelector.Instance.DeselectObject(this);
-            ActorManager.Instance.DeleteActor(actor);
+            ActorManager.Instance.DeleteActor(this);
             Destroy(gameObject);
         }
     }
@@ -43,7 +43,7 @@ public class ActorView : MonoBehaviour
         pos = pos.PutOnGrid(4);
         pos.z = transform.position.z;
         actor.Translate = pos.ToArray();
-        transform.position = pos;
+        transform.position = ((Vector3)sr.sprite.pivot / sr.sprite.pixelsPerUnit) - pos;
     }
 
     private void Update()

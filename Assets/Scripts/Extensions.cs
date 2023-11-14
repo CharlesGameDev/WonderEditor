@@ -4,6 +4,14 @@ using UnityEngine;
 
 public static class Extensions
 {
+    public static TEnum ToEnum<TEnum>(this string strEnumValue, TEnum defaultValue)
+    {
+        if (!Enum.IsDefined(typeof(TEnum), strEnumValue))
+            return defaultValue;
+
+        return (TEnum)Enum.Parse(typeof(TEnum), strEnumValue);
+    }
+
     public static Vector3 ToVector3(this float[] array)
     {
         return new Vector3()

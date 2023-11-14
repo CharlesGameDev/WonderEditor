@@ -3,10 +3,19 @@ using UnityEngine;
 
 public class Inspector : MonoBehaviour
 {
-    public static Inspector Instance { get; private set; }
+    private static Inspector instance;
+    public static Inspector Instance
+    {
+        get
+        {
+            if (instance == null) instance = FindFirstObjectByType<Inspector>(FindObjectsInactive.Include);
+            return instance;
+        }
+    }
 
     public ActorView selectedActor;
 
+    [SerializeField] string wikiLink;
     [SerializeField] TMP_InputField nameInput;
     [SerializeField] TMP_InputField gyamlInput;
     [SerializeField] TMP_InputField hashInput;
@@ -23,7 +32,6 @@ public class Inspector : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         nameInput.onValueChanged.AddListener(SetName);
         gyamlInput.onValueChanged.AddListener(SetGyaml);
         hashInput.onValueChanged.AddListener(SetHash);
@@ -37,7 +45,12 @@ public class Inspector : MonoBehaviour
         rotateXInput.onValueChanged.AddListener(SetRotateX);
         rotateYInput.onValueChanged.AddListener(SetRotateY);
         rotateZInput.onValueChanged.AddListener(SetRotateZ);
-        Hide();
+    }
+
+    public void OpenWiki()
+    {
+        string link = string.Format(wikiLink, selectedActor.actor.Gyaml);
+        Application.OpenURL(link);
     }
     
     public void Hide()
