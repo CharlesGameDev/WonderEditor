@@ -1,0 +1,7 @@
+Goomba,EnemyKuribo
+? Block,BlockHatena
+Brick Block,BlockRenga
+Brick Block Item,BlockRengaItem
+Light Brick Block,BlockRengaLight
+Talking Flower,ObjectTalkingFlower
+Talking Flower (Sky),ObjectTalkingFlowerS
