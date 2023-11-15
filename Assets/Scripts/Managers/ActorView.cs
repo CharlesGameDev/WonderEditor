@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -5,6 +6,7 @@ public class ActorView : MonoBehaviour
 {
     public Actor actor;
     public SpriteRenderer sr;
+    public SpriteRenderer sr2;
     Camera cam;
 
     private void Awake()
@@ -57,12 +59,41 @@ public class ActorView : MonoBehaviour
         Sprite s = ActorManager.Instance.Sprites["unknown"];
         foreach (var sp in ActorManager.Instance.Sprites)
         {
-            if (actor.Gyaml.Contains(sp.Value.name))
+            if (actor.Gyaml == sp.Key)
             {
                 s = sp.Value;
                 break;
             }
         }
+
         sr.sprite = s;
+
+        UpdateSpriteContent();
+    }
+
+    public void UpdateSpriteContent()
+    {
+        switch (actor.Gyaml)
+        {
+            case "BlockRengaItem":
+            case "BlockHatena":
+            case "BlockClarity":
+            case "ObjectBlockClarityCharacter":
+                if (actor.Dynamic != null && actor.Dynamic.ContainsKey("ChildActorSelectName"))
+                {
+                    string item = actor.Dynamic["ChildActorSelectName"].ToString();
+                    if (item.Trim() == "None") return;
+
+                    if (!ActorManager.Instance.Sprites.ContainsKey(item))
+                        item = "ItemQuestion";
+
+                    sr2.sprite = ActorManager.Instance.Sprites[item];
+                    sr2.enabled = true;
+                    return;
+                }
+                break;
+        }
+
+        sr2.enabled = false;
     }
 }

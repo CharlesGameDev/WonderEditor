@@ -1,7 +1,35 @@
 Goomba,EnemyKuribo
 ? Block,BlockHatena
-Brick Block,BlockRenga
-Brick Block Item,BlockRengaItem
+? Block Wide,BlockHatena30
+Hidden Block,BlockClarity
+Hidden Character Block,ObjectBlockClarityCharacter
+! Block,ObjectBlockSurpriseYellow
+Race Block,ObjectBlockRaceStart
+Brick Block Item,BlockRengaItem,ItemQuestion
 Light Brick Block,BlockRengaLight
 Talking Flower,ObjectTalkingFlower
 Talking Flower (Sky),ObjectTalkingFlowerS
+Opening Poplin,CourseNpcOpeningButler
+Coin,ObjectCoinYellow
+10 Coin,ObjectBigTenLuckyCoin
+Purple Coin,ObjectCoinRandom
+Mini Purple Coin,ObjectMiniLuckyCoin
+Mini Flower (Air),ObjectMiniFlowerInAir
+Mini Flower (Block),ObjectMiniFlowerInBlock
+Mini Flower (Water),ObjectMiniFlowerWater
+Propeller Flower,ObjectPropellerFlowerForCourse
+Pipe,ObjectDokan
+Running Pirahna Plant,EnemyRunRunPackun
+Bulrush,EnemyTosshinBig
+Avacado Block 2x2,ObjectAvocadoBlock2x2
+Avacado Block 4x4,ObjectAvocadoBlock4x4
+ObjectBlockEndurance,ObjectBlockEndurance
+ObjectBlockHotStone,ObjectBlockHotStone
+Dash Floor,ObjectDashFloor
+Goal Pole,ObjectGoalPole
+Goal Pole Poplin House,ObjectGoalPoleFort
+Timer Switch Block,ObjectTimerSwitchBlockSync
+Treasure Chest,ObjectTreasureChest
+Wonder Token,ObjectWonderChip
+Xylophone Bridge,ObjectXylophoneBridge
+Checkpoint,RetryPoint

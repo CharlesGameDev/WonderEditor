@@ -74,7 +74,12 @@ public class ObjectSelector : MonoBehaviour
             {
                 if (currentSelected != null)
                 {
-                    string name = $"{currentSelected.actor.Name}\n{currentSelected.actor.Gyaml}";
+                    Vector3 pos = currentSelected.transform.position;
+                    string actorName = currentSelected.name;
+                    if (actorName == "unknown actor")
+                        actorName = currentSelected.actor.Gyaml;
+
+                    string name = $"{currentSelected.actor.Name}\n{actorName}\nX: {pos.x}, Y: {pos.y}";
                     selectedText.text = name;
                     selectedText.transform.position = cam.WorldToScreenPoint(av.transform.position);
                 } else

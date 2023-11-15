@@ -43,16 +43,20 @@ public class BgUnitManager : Manager
     {
         if (wallRenderers != null)
             foreach (LineRenderer lr in wallRenderers)
-                Destroy(lr.gameObject);
+                if (lr != null)
+                    Destroy(lr.gameObject);
         if (wallPoints != null)
             foreach (WallPoint wp in wallPoints)
-                Destroy(wp.gameObject);
+                if (wp != null)
+                    Destroy(wp.gameObject);
         if (beltRailRenderers != null)
             foreach (LineRenderer lr in beltRailRenderers)
-                Destroy(lr.gameObject);
+                if (lr != null)
+                    Destroy(lr.gameObject);
         if (beltRailPoints != null)
             foreach (WallPoint wp in beltRailPoints)
-                Destroy(wp.gameObject);
+                if (wp != null)
+                    Destroy(wp.gameObject);
 
         BgUnit bgu = LevelLoader.Level.root.BgUnits[bguIndex];
         wallRenderers = new LineRenderer[bgu.Walls.Length];
@@ -73,7 +77,7 @@ public class BgUnitManager : Manager
                 for (int i = 0; i < br.Points.Count; i++)
                 {
                     Point p = br.Points[i];
-                    WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity);
+                    WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity, transform);
                     wp.lineIndex = i;
                     wp.lineRenderer = lr;
                     wp.lrIndex = i1;
@@ -98,7 +102,7 @@ public class BgUnitManager : Manager
                 for (int i = 0; i < br.Points.Count; i++)
                 {
                     Point p = br.Points[i];
-                    WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity);
+                    WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity, transform);
                     wp.lineIndex = i;
                     wp.lineRenderer = lr;
                     wp.lrIndex = i1;
@@ -179,7 +183,7 @@ public class BgUnitManager : Manager
         lr.endWidth = lineWidth;
         lr.startColor = color;
         lr.endColor = color;
-        lr.useWorldSpace = false;
+        lr.useWorldSpace = true;
 
         lr.positionCount = br.Points.Count;
         for (int i = 0; i < br.Points.Count; i++)

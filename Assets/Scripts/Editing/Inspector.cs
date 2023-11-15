@@ -89,7 +89,12 @@ public class Inspector : MonoBehaviour
 
     public void EditDynamicValues()
     {
-        DynamicProperties.Instance.Show(selectedActor.actor);
+        DynamicProperties.Instance.Show(selectedActor);
+    }
+
+    public void Duplicate()
+    {
+        ActorManager.Instance.DuplicateActor(selectedActor.actor);
     }
 
     public void SetName(string v) => selectedActor.actor.Name = v;

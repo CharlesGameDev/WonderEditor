@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
@@ -42,6 +43,9 @@ public class CameraController : MonoBehaviour
         }
 
         float scroll = Input.mouseScrollDelta.y * scrollSpeed;
+        if (EventSystem.current.IsPointerOverGameObject())
+            scroll = 0;
+
         rawZoom += scroll;
         if (rawZoom > -1)
             rawZoom = -1;

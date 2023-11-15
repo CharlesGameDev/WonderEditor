@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Policy;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -34,11 +35,14 @@ public class ActorManager : Manager
     {
         if (!LevelLoader.Instance.levelIsLoaded) return;
 
-        PopupField.Instance.Show("Add Actor", "", "Actor GYAML", AddActorCallback);
+        ActorList.Instance.Show(AddActorCallback, "Add Actor");
     }
+    public void AddActor(string gyaml) => AddActorCallback(gyaml);
 
-    public void AddActorCallback(string[] gyaml)
+    public void AddActorCallback(string gyaml)
     {
+        if (!LevelLoader.Instance.levelIsLoaded) return;
+
         Actor newActor = new()
         {
             AreaHash = LevelLoader.Level.root.RootAreaHash,
@@ -48,9 +52,13 @@ public class ActorManager : Manager
             Scale = Vector3.one.ToArray(),
             Rotate = Vector3.zero.ToArray(),
             Layer = "PlayArea1",
-            Gyaml = gyaml[0]
+            Gyaml = gyaml
         };
         newActor.Translate[2] = 0;
+
+        foreach (DynamicPropertyPreset preset in ActorList.Instance.propertyPresets)
+            if (preset.gyaml == gyaml)
+                newActor.Dynamic = preset.ToDynamicDict();
 
         LevelLoader.Level.root.Actors.Add(newActor);
         UpdateVisuals(LevelLoader.Level);
@@ -101,7 +109,7 @@ public class ActorManager : Manager
         }
         foreach (Actor actor in level.root.Actors)
         {
-            GameObject go = new($"{actor.Gyaml}:{actor.Name}");
+            GameObject go = new(ActorList.GetActorName(actor.Gyaml));
             Transform parent = ActorTypeObjects["Other"].transform;
             foreach (var pair in ActorTypeObjects)
             {
@@ -122,7 +130,13 @@ public class ActorManager : Manager
             ActorView view = go.AddComponent<ActorView>();
             view.actor = actor;
 
+            GameObject second = new("second");
+            second.transform.SetParent(go.transform, false);
+            SpriteRenderer sr2 = second.AddComponent<SpriteRenderer>();
+            sr2.sortingOrder = sr.sortingOrder + 1;
+
             view.sr = sr;
+            view.sr2 = sr2;
             view.UpdateSprite();
 
             PolygonCollider2D c = go.AddComponent<PolygonCollider2D>();

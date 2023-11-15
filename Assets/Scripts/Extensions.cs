@@ -4,14 +4,6 @@ using UnityEngine;
 
 public static class Extensions
 {
-    public static TEnum ToEnum<TEnum>(this string strEnumValue, TEnum defaultValue)
-    {
-        if (!Enum.IsDefined(typeof(TEnum), strEnumValue))
-            return defaultValue;
-
-        return (TEnum)Enum.Parse(typeof(TEnum), strEnumValue);
-    }
-
     public static Vector3 ToVector3(this float[] array)
     {
         return new Vector3()
@@ -44,9 +36,18 @@ public static class Extensions
     public static Vector3 PutOnGrid(this Vector3 vector, float grid)
     {
         return new Vector3(
-            (float) Math.Round(vector.x * 4, MidpointRounding.ToEven) / grid,
-            (float) Math.Round(vector.y * 4, MidpointRounding.ToEven) / grid,
-            (float) Math.Round(vector.z * 4, MidpointRounding.ToEven) / grid
+            (float) Math.Round(vector.x * grid, MidpointRounding.ToEven) / grid,
+            (float) Math.Round(vector.y * grid, MidpointRounding.ToEven) / grid,
+            (float) Math.Round(vector.z * grid, MidpointRounding.ToEven) / grid
+        );
+    }
+
+    public static Vector3 RoundToInt(this Vector3 vector)
+    {
+        return new Vector3(
+            Mathf.RoundToInt(vector.x),
+            Mathf.RoundToInt(vector.y),
+            Mathf.RoundToInt(vector.z)
         );
     }
 

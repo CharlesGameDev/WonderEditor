@@ -19,20 +19,23 @@ public class DynamicProperties : MonoBehaviour
     [SerializeField] DynamicPropertyField propertyPrefab;
     [SerializeField] Transform properties;
     Dictionary<string, object> values;
-    Actor actor;
+    ActorView actor;
 
     public void ApplyChanges()
     {
-        actor.Dynamic = new Dictionary<string, object>(values);
+        actor.actor.Dynamic = new Dictionary<string, object>(values);
+        actor.UpdateSpriteContent();
     }
 
     public void AddNewProperty()
     {
+        if (values == null) values = new Dictionary<string, object>();
+
         values.Add("NewProperty", "Value");
         CreateProp("NewProperty", "Value");
     }
 
-    public void Show(Actor actor)
+    public void Show(ActorView actor)
     {
         this.actor = actor;
 
@@ -41,11 +44,11 @@ public class DynamicProperties : MonoBehaviour
         for (int i = 0; i < properties.childCount; i++)
             Destroy(properties.GetChild(i).gameObject);
 
-        if (actor.Dynamic == null) return;
+        if (actor.actor.Dynamic == null) return;
 
-        values = new Dictionary<string, object>(actor.Dynamic);
+        values = new Dictionary<string, object>(actor.actor.Dynamic);
 
-        foreach (var item in actor.Dynamic)
+        foreach (var item in actor.actor.Dynamic)
         {
             CreateProp(item.Key, item.Value);
         }

@@ -45,7 +45,7 @@ public class WallPoint : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
-        pos = pos.PutOnGrid(4);
+        pos = pos.RoundToInt();
         pos.z = transform.position.z;
         point.Translate = pos.ToArray();
         transform.position = pos;
