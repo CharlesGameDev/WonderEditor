@@ -17038,6 +17038,7 @@ MonoBehaviour:
   allActors: []
   actorListText: {fileID: 4900000, guid: 331f7abd7c9d9d94f93c183d0c44b631, type: 3}
   actorPrefab: {fileID: 8447443695892514114, guid: 1a03f29426366cc48b92ee3f4dfe5ff8, type: 3}
+  actorHeaderPrefab: {fileID: 1961635465933221855, guid: 3389802dfb9c24548b117055a7e02f7b, type: 3}
   actorListParent: {fileID: 1029472787}
   actorName: {fileID: 742055800}
   actorQualifiedName: {fileID: 943983829}
@@ -17391,8 +17392,8 @@ MonoBehaviour:
       value: 0
       type: long
     - name: DowsingSaveId
-      value: 0
-      type: -1
+      value: -1
+      type: long
     - name: HasRailMoveArriveAction
       value: false
       type: bool
@@ -17590,6 +17591,17 @@ MonoBehaviour:
     - name: MoveRange
       value: 30
       type: float
+  - gyaml: EnemyAnguri
+    properties:
+    - name: AnguriMouthSize
+      value: 0
+      type: long
+    - name: AnguriMovingType
+      value: 1
+      type: long
+    - name: InitDir
+      value: 1
+      type: long
 --- !u!1 &1297452211
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,6 +31,7 @@ public class ActorList : MonoBehaviour
     Action<string> callback;
     [SerializeField] TextAsset actorListText;
     [SerializeField] GameObject actorPrefab;
+    [SerializeField] GameObject actorHeaderPrefab;
     [SerializeField] Transform actorListParent;
     [SerializeField] TMP_Text actorName;
     [SerializeField] TMP_Text actorQualifiedName;
@@ -69,6 +70,15 @@ public class ActorList : MonoBehaviour
         actorEntries = new Dictionary<ActorEntry, GameObject>();
         foreach (ActorEntry entry in allActors)
         {
+            if (entry.name == "HEADER")
+            {
+                GameObject goh = Instantiate(actorHeaderPrefab, actorListParent);
+                TMP_Text text = goh.transform.GetChild(0).GetComponent<TMP_Text>();
+                text.text = entry.gyaml;
+
+                continue;
+            }
+
             GameObject go = Instantiate(actorPrefab, actorListParent);
 
             Transform c0 = go.transform.GetChild(0);

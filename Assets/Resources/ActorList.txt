@@ -1,9 +1,10 @@
+HEADER,Info
 Spawn Point,PlayerLocator
+HEADER,Level Objects
 Checkpoint,RetryPoint
 Goal Pole,ObjectGoalPole
 Goal Pole (Dead By Body Attack),ObjectGoalPoleDeadByBodyAttack
 Goal Pole Poplin House,ObjectGoalPoleFort
-Goomba,EnemyKuribo
 ? Block,BlockHatena
 ? Block Wide,BlockHatenaLong
 Hidden Block,BlockClarity
@@ -25,8 +26,6 @@ Mini Flower (Block),ObjectMiniFlowerInBlock
 Mini Flower (Water),ObjectMiniFlowerWater
 Propeller Flower,ObjectPropellerFlowerForCourse
 Pipe,ObjectDokan
-Running Pirahna Plant,EnemyRunRunPackun
-Bulrush,EnemyTossin
 Avacado Block 2x2,ObjectAvocadoBlock2x2
 Avacado Block 4x4,ObjectAvocadoBlock4x4
 Dash Floor,ObjectDashFloor
@@ -34,3 +33,8 @@ Timer Switch Block,ObjectTimerSwitchBlockSync
 Treasure Chest,ObjectTreasureChest
 Wonder Token,ObjectWonderChip
 Xylophone Bridge,ObjectXylophoneBridge
+HEADER,Enemies
+Goomba,EnemyKuribo
+Running Pirahna Plant,EnemyRunRunPackun
+Bulrush,EnemyTossin
+Maw-Maw,EnemyAnguri

@@ -71,45 +71,44 @@ public class BgUnitManager : Manager
 
     void UpdateWallRenderers(int bguIndex)
     {
-        LineRenderer[] wallRenderers = this.wallRenderers[bguIndex];
-        List<WallPoint> wallPoints = this.wallPoints[bguIndex];
-        LineRenderer[] beltRailRenderers = this.beltRailRenderers[bguIndex];
-        List<WallPoint> beltRailPoints = this.beltRailPoints[bguIndex];
-        if (wallRenderers != null)
-            foreach (LineRenderer lr in wallRenderers)
+        if (wallRenderers[bguIndex] != null)
+            foreach (LineRenderer lr in wallRenderers[bguIndex])
                 if (lr != null)
                     Destroy(lr.gameObject);
         if (wallPoints != null)
-            foreach (WallPoint wp in wallPoints)
+            foreach (WallPoint wp in wallPoints[bguIndex])
                 if (wp != null)
                     Destroy(wp.gameObject);
         if (beltRailRenderers != null)
-            foreach (LineRenderer lr in beltRailRenderers)
+            foreach (LineRenderer lr in beltRailRenderers[bguIndex])
                 if (lr != null)
                     Destroy(lr.gameObject);
         if (beltRailPoints != null)
-            foreach (WallPoint wp in beltRailPoints)
+            foreach (WallPoint wp in beltRailPoints[bguIndex])
                 if (wp != null)
                     Destroy(wp.gameObject);
 
         BgUnit bgu = LevelLoader.Level.root.BgUnits[bguIndex];
-        wallRenderers = new LineRenderer[bgu.Walls.Length];
-        wallPoints = new List<WallPoint>();
+        if (bgu.Walls != null)
+            wallRenderers[bguIndex] = new LineRenderer[bgu.Walls.Count];
+        else
+            wallRenderers[bguIndex] = new LineRenderer[] { };
+        wallPoints[bguIndex] = new List<WallPoint>();
         if (bgu.BeltRails != null)
         {
-            beltRailRenderers = new LineRenderer[bgu.BeltRails.Length];
-            beltRailPoints = new List<WallPoint>();
+            beltRailRenderers[bguIndex] = new LineRenderer[bgu.BeltRails.Count];
+            beltRailPoints[bguIndex] = new List<WallPoint>();
         }
 
         if (bgu.BeltRails != null && doBeltRails)
         {
-            for (int i1 = 0; i1 < bgu.BeltRails.Length; i1++)
+            for (int i1 = 0; i1 < bgu.BeltRails.Count; i1++)
             {
                 BeltRail br = bgu.BeltRails[i1];
                 Color c = beltRailColor;
                 if (!br.IsClosed) c = beltRailColorNotClosed;
                 LineRenderer lr = CreateWall(br, wallObject.transform, c);
-                beltRailRenderers[i1] = lr;
+                beltRailRenderers[bguIndex][i1] = lr;
 
                 for (int i = 0; i < br.Points.Count; i++)
                 {
@@ -121,20 +120,20 @@ public class BgUnitManager : Manager
                     wp.bguIndex = bguIndex;
                     wp.type = WallType.BeltRail;
                     wp.point = p;
-                    beltRailPoints.Add(wp);
+                    beltRailPoints[bguIndex].Add(wp);
                 }
             }
         }
         if (bgu.Walls != null && doWalls)
         {
-            for (int i1 = 0; i1 < bgu.Walls.Length; i1++)
+            for (int i1 = 0; i1 < bgu.Walls.Count; i1++)
             {
                 BgWall wall = bgu.Walls[i1];
                 BeltRail br = wall.ExternalRail;
                 Color c = wallColor;
                 if (!br.IsClosed) c = wallColorNotClosed;
                 LineRenderer lr = CreateWall(br, wallObject.transform, c);
-                wallRenderers[i1] = lr;
+                wallRenderers[bguIndex][i1] = lr;
 
                 for (int i = 0; i < br.Points.Count; i++)
                 {
@@ -146,7 +145,7 @@ public class BgUnitManager : Manager
                     wp.bguIndex = bguIndex;
                     wp.type = WallType.Wall;
                     wp.point = p;
-                    wallPoints.Add(wp);
+                    wallPoints[bguIndex].Add(wp);
                 }
             }
         }
@@ -182,6 +181,9 @@ public class BgUnitManager : Manager
                 BgUnit bgu = LevelLoader.Level.root.BgUnits[0];
                 if (t == WallType.Wall)
                 {
+                    if (bgu.Walls.Count <= group)
+                        bgu.Walls.Add(new BgWall());
+
                     BgWall wall = bgu.Walls[group];
                     Point p = new()
                     {
@@ -194,6 +196,9 @@ public class BgUnitManager : Manager
                 }
                 if (t == WallType.BeltRail)
                 {
+                    if (bgu.BeltRails.Count <= group)
+                        bgu.BeltRails.Add(new BeltRail());
+
                     BeltRail rail = bgu.BeltRails[group];
                     Point p = new()
                     {
