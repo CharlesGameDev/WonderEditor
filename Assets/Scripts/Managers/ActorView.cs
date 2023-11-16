@@ -73,16 +73,24 @@ public class ActorView : MonoBehaviour
 
     public void UpdateSpriteContent()
     {
+        if (actor.Dynamic != null && actor.Dynamic.ContainsKey("InitDir"))
+            sr.flipX = sr2.flipX = actor.Dynamic["InitDir"].ToString() == "1";
+        else
+        {
+            sr.flipX = false;
+            sr2.flipX = false;
+        }
+
         switch (actor.Gyaml)
         {
-            case "BlockRengaItem":
-            case "BlockHatena":
-            case "BlockClarity":
             case "ObjectBlockClarityCharacter":
+            case "BlockClarity":
+            case "BlockRengaItem":
+            case "BlockHatenaLong":
+            case "BlockHatena":
                 if (actor.Dynamic != null && actor.Dynamic.ContainsKey("ChildActorSelectName"))
                 {
                     string item = actor.Dynamic["ChildActorSelectName"].ToString();
-                    if (item.Trim() == "None") return;
 
                     if (!ActorManager.Instance.Sprites.ContainsKey(item))
                         item = "ItemQuestion";

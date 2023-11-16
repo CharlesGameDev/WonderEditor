@@ -17,10 +17,10 @@ public class BgUnitManager : Manager
     [SerializeField] bool doBeltRails = true;
     [SerializeField] bool doWalls = true;
     [SerializeField] WallPoint wallPointPrefab;
-    LineRenderer[] wallRenderers;
-    List<WallPoint> wallPoints;
-    LineRenderer[] beltRailRenderers;
-    List<WallPoint> beltRailPoints;
+    List<LineRenderer[]> wallRenderers;
+    List<List<WallPoint>> wallPoints;
+    List<LineRenderer[]> beltRailRenderers;
+    List<List<WallPoint>> beltRailPoints;
     GameObject wallObject;
 
     private void Awake()
@@ -30,10 +30,40 @@ public class BgUnitManager : Manager
 
     public override void UpdateVisuals(Level level)
     {
+        if (wallRenderers != null)
+            foreach (LineRenderer[] lr in wallRenderers)
+                if (lr != null)
+                    foreach (LineRenderer lr2 in lr)
+                        Destroy(lr2.gameObject);
+        if (wallPoints != null)
+            foreach (List<WallPoint> wp in wallPoints)
+                if (wp != null)
+                    foreach (WallPoint wp2 in wp)
+                        Destroy(wp2.gameObject);
+        if (beltRailRenderers != null)
+            foreach (LineRenderer[] lr in beltRailRenderers)
+                if (lr != null)
+                    foreach (LineRenderer lr2 in lr)
+                        Destroy(lr2.gameObject);
+        if (beltRailPoints != null)
+            foreach (List<WallPoint> wp in beltRailPoints)
+                if (wp != null)
+                    foreach (WallPoint wp2 in wp)
+                        Destroy(wp2.gameObject);
+
+        wallRenderers = new List<LineRenderer[]>();
+        wallPoints = new List<List<WallPoint>>();
+        beltRailRenderers = new List<LineRenderer[]>();
+        beltRailPoints = new List<List<WallPoint>>();
+
         for (int i = 0; i < level.root.BgUnits.Length; i++)
         {
             wallObject = new($"Wall {i}");
             wallObject.transform.SetParent(transform);
+            wallRenderers.Add(new LineRenderer[] { });
+            wallPoints.Add(new List<WallPoint>());
+            beltRailRenderers.Add(new LineRenderer[] { });
+            beltRailPoints.Add(new List<WallPoint>());
 
             UpdateWallRenderers(i);
         }
@@ -41,6 +71,10 @@ public class BgUnitManager : Manager
 
     void UpdateWallRenderers(int bguIndex)
     {
+        LineRenderer[] wallRenderers = this.wallRenderers[bguIndex];
+        List<WallPoint> wallPoints = this.wallPoints[bguIndex];
+        LineRenderer[] beltRailRenderers = this.beltRailRenderers[bguIndex];
+        List<WallPoint> beltRailPoints = this.beltRailPoints[bguIndex];
         if (wallRenderers != null)
             foreach (LineRenderer lr in wallRenderers)
                 if (lr != null)
@@ -61,10 +95,13 @@ public class BgUnitManager : Manager
         BgUnit bgu = LevelLoader.Level.root.BgUnits[bguIndex];
         wallRenderers = new LineRenderer[bgu.Walls.Length];
         wallPoints = new List<WallPoint>();
-        beltRailRenderers = new LineRenderer[bgu.BeltRails.Length];
-        beltRailPoints = new List<WallPoint>();
+        if (bgu.BeltRails != null)
+        {
+            beltRailRenderers = new LineRenderer[bgu.BeltRails.Length];
+            beltRailPoints = new List<WallPoint>();
+        }
 
-        if (doBeltRails)
+        if (bgu.BeltRails != null && doBeltRails)
         {
             for (int i1 = 0; i1 < bgu.BeltRails.Length; i1++)
             {
@@ -88,7 +125,7 @@ public class BgUnitManager : Manager
                 }
             }
         }
-        if (doWalls)
+        if (bgu.Walls != null && doWalls)
         {
             for (int i1 = 0; i1 < bgu.Walls.Length; i1++)
             {

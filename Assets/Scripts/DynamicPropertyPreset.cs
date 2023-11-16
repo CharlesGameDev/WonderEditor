@@ -37,6 +37,8 @@ public class DynamicPropertyPreset
                 value = ulong.Parse(p.value);
             else if (t == typeof(float))
                 value = float.Parse(p.value);
+            else if (t == typeof(ItemNames))
+                value = p.value;
             else
                 value = p.value;
 

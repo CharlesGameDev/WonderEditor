@@ -1,9 +1,15 @@
+Spawn Point,PlayerLocator
+Checkpoint,RetryPoint
+Goal Pole,ObjectGoalPole
+Goal Pole (Dead By Body Attack),ObjectGoalPoleDeadByBodyAttack
+Goal Pole Poplin House,ObjectGoalPoleFort
 Goomba,EnemyKuribo
 ? Block,BlockHatena
-? Block Wide,BlockHatena30
+? Block Wide,BlockHatenaLong
 Hidden Block,BlockClarity
 Hidden Character Block,ObjectBlockClarityCharacter
 ! Block,ObjectBlockSurpriseYellow
+Breakable Block,ObjectBlockHardBreakable
 Race Block,ObjectBlockRaceStart
 Brick Block Item,BlockRengaItem,ItemQuestion
 Light Brick Block,BlockRengaLight
@@ -20,16 +26,11 @@ Mini Flower (Water),ObjectMiniFlowerWater
 Propeller Flower,ObjectPropellerFlowerForCourse
 Pipe,ObjectDokan
 Running Pirahna Plant,EnemyRunRunPackun
-Bulrush,EnemyTosshinBig
+Bulrush,EnemyTossin
 Avacado Block 2x2,ObjectAvocadoBlock2x2
 Avacado Block 4x4,ObjectAvocadoBlock4x4
-ObjectBlockEndurance,ObjectBlockEndurance
-ObjectBlockHotStone,ObjectBlockHotStone
 Dash Floor,ObjectDashFloor
-Goal Pole,ObjectGoalPole
-Goal Pole Poplin House,ObjectGoalPoleFort
 Timer Switch Block,ObjectTimerSwitchBlockSync
 Treasure Chest,ObjectTreasureChest
 Wonder Token,ObjectWonderChip
 Xylophone Bridge,ObjectXylophoneBridge
-Checkpoint,RetryPoint

@@ -6,10 +6,12 @@ public class SceneScript : MonoBehaviour
 {
     [SerializeField] Animator wipeAnimator;
     [SerializeField] bool playWipeOutOnLoad = true;
+    AudioSource soundSource;
 
     private void Awake()
     {
         if (playWipeOutOnLoad) wipeAnimator.Play("WipeOut");
+        soundSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void LoadScene(string sceneName) => StartCoroutine(ILoadScene(sceneName));
@@ -29,5 +31,10 @@ public class SceneScript : MonoBehaviour
     public void Close()
     {
         Application.Quit();
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        soundSource.PlayOneShot(clip);
     }
 }

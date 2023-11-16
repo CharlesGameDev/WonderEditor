@@ -29,7 +29,7 @@ public class DynamicProperties : MonoBehaviour
 
     public void AddNewProperty()
     {
-        if (values == null) values = new Dictionary<string, object>();
+        values ??= new Dictionary<string, object>();
 
         values.Add("NewProperty", "Value");
         CreateProp("NewProperty", "Value");
@@ -68,7 +68,7 @@ public class DynamicProperties : MonoBehaviour
             nameField.name = value;
         });
 
-        if (bool.TryParse(value.ToString(), out bool v))
+        if (value != null && bool.TryParse(value.ToString(), out bool v))
         {
             Toggle toggle = pfield.field2Toggle;
             toggle.isOn = v;
@@ -82,6 +82,8 @@ public class DynamicProperties : MonoBehaviour
         }
         else
         {
+            if (value == null) value = "";
+
             TMP_InputField field = pfield.field2Text;
             field.text = value.ToString();
 

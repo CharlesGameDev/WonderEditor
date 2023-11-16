@@ -1,20 +1,22 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Policy;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ActorManager : Manager
 {
     public static ActorManager Instance { get; private set; }
 
+    [System.Serializable]
+    public class ActorGroup
+    {
+        public string gyaml;
+        public string group;
+    }
+
     public Dictionary<string, Sprite> Sprites;
     public string[] ActorTypes;
     [SerializeField] bool[] ActorTypeVisibilityDefaults;
     public Dictionary<string, GameObject> ActorTypeObjects;
+    public ActorGroup[] ActorGroups;
 
     private void Awake()
     {
@@ -46,8 +48,8 @@ public class ActorManager : Manager
         Actor newActor = new()
         {
             AreaHash = LevelLoader.Level.root.RootAreaHash,
-            Name = LevelLoader.Level.root.Actors[0].Name + UnityEngine.Random.Range(1, 999999),
-            Hash = (ulong)UnityEngine.Random.Range(0, ulong.MaxValue),
+            Name = LevelLoader.Level.root.Actors[0].Name + Random.Range(1, 999999),
+            Hash = (ulong)Random.Range(0, ulong.MaxValue),
             Translate = Camera.main.ScreenToWorldPoint(Input.mousePosition).ToArray(),
             Scale = Vector3.one.ToArray(),
             Rotate = Vector3.zero.ToArray(),
@@ -69,13 +71,16 @@ public class ActorManager : Manager
         Actor newActor = new()
         {
             AreaHash = actor.AreaHash,
-            Name = LevelLoader.Level.root.Actors[0].Name + UnityEngine.Random.Range(1, 999999),
-            Hash = (ulong)UnityEngine.Random.Range(0, ulong.MaxValue),
+            Name = LevelLoader.Level.root.Actors[0].Name + Random.Range(1, 999999),
+            Hash = (ulong)Random.Range(0, ulong.MaxValue),
             Translate = Camera.main.ScreenToWorldPoint(Input.mousePosition).ToArray(),
             Scale = actor.Scale,
             Rotate = actor.Rotate,
             Layer = actor.Layer,
-            Gyaml = actor.Gyaml
+            Gyaml = actor.Gyaml,
+            Dynamic = actor.Dynamic,
+            InLinks = actor.InLinks,
+            System = actor.System
         };
         newActor.Translate[2] = actor.Translate[2];
 
@@ -110,15 +115,38 @@ public class ActorManager : Manager
         foreach (Actor actor in level.root.Actors)
         {
             GameObject go = new(ActorList.GetActorName(actor.Gyaml));
-            Transform parent = ActorTypeObjects["Other"].transform;
-            foreach (var pair in ActorTypeObjects)
+            Transform parent = null;
+
+            if (parent == null)
             {
-                if (actor.Gyaml.StartsWith(pair.Key))
+                foreach (var item in ActorGroups)
                 {
-                    parent = pair.Value.transform;
-                    break;
+                    if (actor.Gyaml.StartsWith(item.gyaml))
+                    {
+                        foreach (var pair in ActorTypeObjects)
+                        {
+                            if (pair.Key == item.group)
+                            {
+                                parent = pair.Value.transform;
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
+            if (parent == null)
+            {
+                foreach (var pair in ActorTypeObjects)
+                {
+                    if (actor.Gyaml.StartsWith(pair.Key))
+                    {
+                        parent = pair.Value.transform;
+                        break;
+                    }
+                }
+            }
+            if (parent == null) parent = ActorTypeObjects["Other"].transform;
             go.transform.SetParent(parent);
 
             go.transform.localPosition = actor.Translate.ToVector3();

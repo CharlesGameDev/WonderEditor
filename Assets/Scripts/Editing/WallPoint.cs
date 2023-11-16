@@ -5,8 +5,8 @@ public class WallPoint : MonoBehaviour
 {
     public Point point;
     public int lineIndex;
-    public int lrIndex;
     public int bguIndex;
+    public int lrIndex;
     public WallType type;
     public LineRenderer lineRenderer;
     Camera cam;

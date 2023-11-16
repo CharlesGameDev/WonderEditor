@@ -9,7 +9,6 @@ using Application = UnityEngine.Application;
 public class ToolsScreen : MonoBehaviour
 {
     [SerializeField] TMP_Text creditsText;
-    [SerializeField] AudioSource soundSource;
     [SerializeField] GameObject downloadPopupBox;
     [SerializeField] TMP_Text downloadPopupText;
 
@@ -27,10 +26,5 @@ public class ToolsScreen : MonoBehaviour
             downloadPopupBox.SetActive(true);
             downloadPopupText.text = string.Format(downloadPopupText.text, Application.version, release.Name);
         }
-    }
-
-    public void PlaySound(AudioClip clip)
-    {
-        soundSource.PlayOneShot(clip);
     }
 }

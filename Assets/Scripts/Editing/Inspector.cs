@@ -66,6 +66,21 @@ public class Inspector : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    public void FindActor()
+    {
+        if (selectedActor == null) return;
+
+        ActorList.Instance.Show(FindActorCallback, "Select Actor");
+    }
+
+    void FindActorCallback(string gyaml)
+    {
+        if (selectedActor == null) return;
+
+        selectedActor.actor.Gyaml = gyaml;
+        selectedActor.UpdateSprite();
+    }
+
     private void Update()
     {
         if (selectedActor != null)

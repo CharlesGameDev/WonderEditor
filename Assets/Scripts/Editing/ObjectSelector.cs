@@ -86,6 +86,7 @@ public class ObjectSelector : MonoBehaviour
                     selectedText.text = "";
 
                 sr.sprite = av.GetComponent<SpriteRenderer>().sprite;
+                sr.flipX = av.sr.flipX;
                 transform.SetPositionAndRotation(av.transform.position, av.transform.rotation);
                 transform.localScale = av.transform.localScale;
 
