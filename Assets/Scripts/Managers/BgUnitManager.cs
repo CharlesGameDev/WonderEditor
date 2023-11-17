@@ -56,7 +56,7 @@ public class BgUnitManager : Manager
         beltRailRenderers = new List<LineRenderer[]>();
         beltRailPoints = new List<List<WallPoint>>();
 
-        for (int i = 0; i < level.root.BgUnits.Length; i++)
+        for (int i = 0; i < level.root.BgUnits.Count; i++)
         {
             wallObject = new($"Wall {i}");
             wallObject.transform.SetParent(transform);
@@ -69,8 +69,9 @@ public class BgUnitManager : Manager
         }
     }
 
-    void UpdateWallRenderers(int bguIndex)
+    public void UpdateWallRenderers(int bguIndex)
     {
+        Debug.Log($"Updating wall renderers: {bguIndex + 1}/{LevelLoader.Level.root.BgUnits.Count}");
         if (wallRenderers[bguIndex] != null)
             foreach (LineRenderer lr in wallRenderers[bguIndex])
                 if (lr != null)
@@ -114,9 +115,9 @@ public class BgUnitManager : Manager
                 {
                     Point p = br.Points[i];
                     WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity, transform);
-                    wp.lineIndex = i;
+                    wp.index = i;
                     wp.lineRenderer = lr;
-                    wp.lrIndex = i1;
+                    wp.group = i1;
                     wp.bguIndex = bguIndex;
                     wp.type = WallType.BeltRail;
                     wp.point = p;
@@ -139,10 +140,10 @@ public class BgUnitManager : Manager
                 {
                     Point p = br.Points[i];
                     WallPoint wp = Instantiate(wallPointPrefab, p.Translate.ToVector3(), Quaternion.identity, transform);
-                    wp.lineIndex = i;
-                    wp.lineRenderer = lr;
-                    wp.lrIndex = i1;
+                    wp.index = i;
+                    wp.group = i1;
                     wp.bguIndex = bguIndex;
+                    wp.lineRenderer = lr;
                     wp.type = WallType.Wall;
                     wp.point = p;
                     wallPoints[bguIndex].Add(wp);
@@ -151,38 +152,61 @@ public class BgUnitManager : Manager
         }
     }
 
+    public void ToggleGroupIsClosed(WallPoint wp)
+    {
+        if (wp.type == WallType.Wall)
+            LevelLoader.Level.root.BgUnits[wp.bguIndex].Walls[wp.group].ExternalRail.IsClosed = !LevelLoader.Level.root.BgUnits[wp.bguIndex].Walls[wp.group].ExternalRail.IsClosed;
+        if (wp.type == WallType.BeltRail)
+            LevelLoader.Level.root.BgUnits[wp.bguIndex].BeltRails[wp.group].IsClosed = !LevelLoader.Level.root.BgUnits[wp.bguIndex].BeltRails[wp.group].IsClosed;
+
+        UpdateWallRenderers(wp.bguIndex);
+    }
+
     public void AddWall()
     {
         if (!LevelLoader.Instance.levelIsLoaded) return;
 
-        PopupField.Instance.ShowWithType("Group Index", "Wall Index", Enum.GetNames(typeof(WallType)), "Number", AddWallCallback);
+        PopupField.Instance.ShowWithType("Group Index", "Wall Index", Enum.GetNames(typeof(WallType)), "Number", AddWallCallback1);
     }
-
-    public void RemoveWall(WallPoint wp)
+    string[] addWallPopupValue;
+    string addWallPopupType;
+    int addWallPopupBGU;
+    void AddWallCallback1(string[] value, string type)
     {
-        if (wp.type == WallType.BeltRail)
-        {
-            LevelLoader.Level.root.BgUnits[wp.bguIndex].BeltRails[wp.lrIndex].Points.RemoveAt(wp.lineIndex);
-        }
-        else if (wp.type == WallType.Wall)
-        {
-            LevelLoader.Level.root.BgUnits[wp.bguIndex].Walls[wp.lrIndex].ExternalRail.Points.RemoveAt(wp.lineIndex);
-        }
-        UpdateWallRenderers(wp.bguIndex);
+        addWallPopupValue = value;
+        addWallPopupType = type;
+        PopupField.Instance.Show("BgUnit", "", "Index", AddWallCallback2);
     }
 
-    void AddWallCallback(string[] value, string type)
+    void AddWallCallback2(string[] bgu)
+    {
+        addWallPopupBGU = int.Parse(bgu[0]);
+        AddWallCallback(addWallPopupValue, addWallPopupType, addWallPopupBGU);
+    }
+
+    void AddWallCallback(string[] value, string type, int bgui)
     {
         WallType t = (WallType)Enum.Parse(typeof(WallType), type);
         if (int.TryParse(value[0], out int group))
         {
             if (int.TryParse(value[1], out int index))
             {
-                BgUnit bgu = LevelLoader.Level.root.BgUnits[0];
+                bool updateVisuals = false;
+                if (LevelLoader.Level.root.BgUnits.Count <= bgui)
+                {
+                    LevelLoader.Level.root.BgUnits.Add(new BgUnit());
+                    bgui = LevelLoader.Level.root.BgUnits.Count - 1;
+                    updateVisuals = true;
+                }
+
+                BgUnit bgu = LevelLoader.Level.root.BgUnits[bgui];
                 if (t == WallType.Wall)
                 {
                     if (bgu.Walls.Count <= group)
+                    {
                         bgu.Walls.Add(new BgWall());
+                        group = bgu.Walls.Count - 1;
+                    }
 
                     BgWall wall = bgu.Walls[group];
                     Point p = new()
@@ -191,13 +215,14 @@ public class BgUnitManager : Manager
                     };
                     p.Translate[2] = 2f;
                     wall.ExternalRail.Points.Insert(index, p);
-
-                    UpdateWallRenderers(0);
                 }
                 if (t == WallType.BeltRail)
                 {
                     if (bgu.BeltRails.Count <= group)
+                    {
                         bgu.BeltRails.Add(new BeltRail());
+                        group = bgu.BeltRails.Count - 1;
+                    }
 
                     BeltRail rail = bgu.BeltRails[group];
                     Point p = new()
@@ -206,11 +231,27 @@ public class BgUnitManager : Manager
                     };
                     p.Translate[2] = 2f;
                     rail.Points.Insert(index, p);
-
-                    UpdateWallRenderers(0);
                 }
+
+                if (updateVisuals)
+                    UpdateVisuals(LevelLoader.Level);
+                else
+                    UpdateWallRenderers(bgui);
             }
         }
+    }
+
+    public void RemoveWall(WallPoint wp)
+    {
+        if (wp.type == WallType.BeltRail)
+        {
+            LevelLoader.Level.root.BgUnits[wp.bguIndex].BeltRails[wp.group].Points.RemoveAt(wp.index);
+        }
+        else if (wp.type == WallType.Wall)
+        {
+            LevelLoader.Level.root.BgUnits[wp.bguIndex].Walls[wp.group].ExternalRail.Points.RemoveAt(wp.index);
+        }
+        UpdateWallRenderers(wp.bguIndex);
     }
 
     LineRenderer CreateWall(BeltRail br, Transform parent, Color color)

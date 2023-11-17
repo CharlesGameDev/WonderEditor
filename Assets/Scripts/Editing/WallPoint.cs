@@ -4,9 +4,9 @@ using UnityEngine.EventSystems;
 public class WallPoint : MonoBehaviour
 {
     public Point point;
-    public int lineIndex;
+    public int index;
     public int bguIndex;
-    public int lrIndex;
+    public int group;
     public WallType type;
     public LineRenderer lineRenderer;
     Camera cam;
@@ -49,6 +49,31 @@ public class WallPoint : MonoBehaviour
         pos.z = transform.position.z;
         point.Translate = pos.ToArray();
         transform.position = pos;
-        lineRenderer.SetPosition(lineIndex, pos);
+        lineRenderer.SetPosition(index, pos);
+    }
+
+    public void ToggleGroupIsClosed()
+    {
+        BgUnitManager.Instance.ToggleGroupIsClosed(this);
+    }
+
+    public void AddPositionZ(int amount)
+    {
+        if (type == WallType.Wall)
+            LevelLoader.Level.root.BgUnits[bguIndex].Walls[group].ExternalRail.Points[index].Translate[2] += amount;
+        if (type == WallType.BeltRail)
+            LevelLoader.Level.root.BgUnits[bguIndex].BeltRails[group].Points[index].Translate[2] += amount;
+
+        BgUnitManager.Instance.UpdateWallRenderers(bguIndex);
+    }
+
+    public void AddModelNumber(int amount)
+    {
+        LevelLoader.Level.root.BgUnits[bguIndex].ModelType += amount;
+    }
+
+    public long GetModelNumber()
+    {
+        return LevelLoader.Level.root.BgUnits[bguIndex].ModelType;
     }
 }

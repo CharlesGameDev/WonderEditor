@@ -63,8 +63,6 @@ public class ObjectSelector : MonoBehaviour
         }
         else
         {
-            selectedText.text = "";
-
             ActorView av = null;
             if (currentSelected != null)
                 av = currentSelected;
@@ -82,6 +80,11 @@ public class ObjectSelector : MonoBehaviour
                     string name = $"{currentSelected.actor.Name}\n{actorName}\nX: {pos.x}, Y: {pos.y}";
                     selectedText.text = name;
                     selectedText.transform.position = cam.WorldToScreenPoint(av.transform.position);
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        ClickObject(currentSelected);
+                    }
                 } else
                     selectedText.text = "";
 
@@ -98,7 +101,18 @@ public class ObjectSelector : MonoBehaviour
             {
                 selectedText.transform.position = cam.WorldToScreenPoint(currentSelectedWall.transform.position);
                 Vector3 pos = currentSelectedWall.transform.position;
-                selectedText.text += $"Wall Group: {currentSelectedWall.lrIndex}\nWall Index: {currentSelectedWall.lineIndex}\nType: {currentSelectedWall.type}\nX: {pos.x}, Y: {pos.y}";
+                selectedText.text = $"Wall Group: {currentSelectedWall.group}\nWall Index: {currentSelectedWall.index}\nBgUnit: {currentSelectedWall.bguIndex}\nModel: {currentSelectedWall.GetModelNumber()}\nType: {currentSelectedWall.type}\nX: {pos.x}, Y: {pos.y}, Z: {pos.z}\nE to toggle semisolid\n[] to move forward and back\n-= to change model";
+                
+                if (Input.GetKeyDown(KeyCode.E))
+                    currentSelectedWall.ToggleGroupIsClosed();
+                if (Input.GetKeyDown(KeyCode.RightBracket))
+                    currentSelectedWall.AddPositionZ(1);
+                if (Input.GetKeyDown(KeyCode.LeftBracket))
+                    currentSelectedWall.AddPositionZ(-1);
+                if (Input.GetKeyDown(KeyCode.Minus))
+                    currentSelectedWall.AddModelNumber(-1);
+                if (Input.GetKeyDown(KeyCode.Equals))
+                    currentSelectedWall.AddModelNumber(1);
             }
         }
     }

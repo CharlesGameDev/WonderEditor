@@ -28,6 +28,7 @@ public class PopupField : MonoBehaviour
     public void Show(string fieldName1, string fieldName2, string description, Action<string[]> callback)
     {
         field1Text.text = fieldName1;
+        field1.text = "";
         field1.gameObject.SetActive(true);
         typeDropdown.gameObject.SetActive(false);
         if (string.IsNullOrEmpty(fieldName2))
@@ -35,6 +36,7 @@ public class PopupField : MonoBehaviour
         else
         {
             field2Text.text = fieldName2;
+            field2.text = "";
             field2.gameObject.SetActive(true);
         }
         descriptionNameText.text = description;
@@ -47,8 +49,10 @@ public class PopupField : MonoBehaviour
     {
         field1Text.text = fieldName1;
         field1.gameObject.SetActive(true);
+        field1.text = "";
         field2Text.text = fieldName2;
         field2.gameObject.SetActive(true);
+        field2.text = "";
         typeDropdown.ClearOptions();
         typeDropdown.AddOptions(type.ToList());
         typeDropdown.gameObject.SetActive(true);
@@ -61,9 +65,9 @@ public class PopupField : MonoBehaviour
 
     public void Submit()
     {
+        gameObject.SetActive(false);
         callback?.Invoke(new string[] { field1.text, field2.text });
         callbackWithType?.Invoke(new string[] { field1.text, field2.text }, typeSelected);
-        this.gameObject.SetActive(false);
     }
 
     public void SetTypeSelected(int type)

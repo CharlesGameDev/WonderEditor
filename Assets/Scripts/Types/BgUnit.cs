@@ -7,4 +7,10 @@ public class BgUnit
     public List<BgWall> Walls;
     public long ModelType;
     public long SkinDivision;
+
+    public BgUnit()
+    {
+        BeltRails = new List<BeltRail>();
+        Walls = new List<BgWall>();
+    }
 }

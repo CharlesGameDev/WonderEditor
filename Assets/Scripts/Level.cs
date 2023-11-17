@@ -15,7 +15,7 @@ public class Root
 {
     public ActorToRailLink[] ActorToRailLinks;
     public List<Actor> Actors;
-    public BgUnit[] BgUnits;
+    public List<BgUnit> BgUnits;
     public Link[] Links;
     public Rail[] Rails;
     public uint RootAreaHash;
