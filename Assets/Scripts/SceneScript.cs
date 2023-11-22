@@ -4,12 +4,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneScript : MonoBehaviour
 {
+    public static SceneScript Instance { get; private set; }
+
     [SerializeField] Animator wipeAnimator;
     [SerializeField] bool playWipeOutOnLoad = true;
     AudioSource soundSource;
 
     private void Awake()
     {
+        Instance = this;
+
         if (playWipeOutOnLoad) wipeAnimator.Play("WipeOut");
         soundSource = gameObject.AddComponent<AudioSource>();
     }

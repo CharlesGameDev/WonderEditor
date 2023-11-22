@@ -1,6 +1,7 @@
 HEADER,Info
 Spawn Point,PlayerLocator
 HEADER,Level Objects
+Wonder Seed,ItemOffering
 Checkpoint,RetryPoint
 Goal Pole,ObjectGoalPole
 Goal Pole (Dead By Body Attack),ObjectGoalPoleDeadByBodyAttack
@@ -10,7 +11,8 @@ Goal Pole Poplin House,ObjectGoalPoleFort
 Hidden Block,BlockClarity
 Hidden Character Block,ObjectBlockClarityCharacter
 ! Block,ObjectBlockSurpriseYellow
-Breakable Block,ObjectBlockHardBreakable
+Hard Breakable Block,ObjectBlockHardBreakable
+Hard Block,ObjectBlockHard
 Race Block,ObjectBlockRaceStart
 Brick Block Item,BlockRengaItem,ItemQuestion
 Light Brick Block,BlockRengaLight
@@ -29,12 +31,18 @@ Pipe,ObjectDokan
 Avacado Block 2x2,ObjectAvocadoBlock2x2
 Avacado Block 4x4,ObjectAvocadoBlock4x4
 Dash Floor,ObjectDashFloor
+Reverse Dash Floor,ObjectDashFloorBlue
 Timer Switch Block,ObjectTimerSwitchBlockSync
+Timer Switch Block Block,ObjectBlockDotLineWithTimerBlock
 Treasure Chest,ObjectTreasureChest
-Wonder Token,ObjectWonderChip
+Wonder Token,ItemWonderChip
 Xylophone Bridge,ObjectXylophoneBridge
+HEADER,Props
+Badge Sign,ObjectBadgeSignBoard
 HEADER,Enemies
 Goomba,EnemyKuribo
 Running Pirahna Plant,EnemyRunRunPackun
+Skedaddler,EnemyUzaPiyo
 Bulrush,EnemyTossin
 Maw-Maw,EnemyAnguri
+Red Koopa Troopa,EnemyNokonokoRed

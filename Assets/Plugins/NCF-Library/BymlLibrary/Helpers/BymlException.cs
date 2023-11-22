@@ -5,7 +5,7 @@ namespace Nintendo.Byml
     /// <summary>
     /// Represents errors that occur when trying to process invalid BYAML data.
     /// </summary>
-    internal class BymlException : Exception
+    public class BymlException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BymlException"/> class with a specified error message.

@@ -2,8 +2,8 @@ using Nintendo.Byml;
 using SFB;
 using System.IO;
 using UnityEngine;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-using ZstdSharp;
 
 public class AreaParamLoader : MonoBehaviour
 {
@@ -50,7 +50,14 @@ public class AreaParamLoader : MonoBehaviour
             .WithTypeConverter(new LongConverter())
             .Build();
 
-        ap = deserializer.Deserialize<AreaParam>(yaml_content);
+        try
+        {
+            ap = deserializer.Deserialize<AreaParam>(yaml_content);
+        } catch (YamlException)
+        {
+            ErrorPopup.Show("YamlException", "Invalid Area Param file.");
+            return;
+        }
 
         loadedDisable.SetActive(false);
         loadedEnable.SetActive(true);

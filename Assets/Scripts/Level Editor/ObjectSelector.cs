@@ -79,7 +79,7 @@ public class ObjectSelector : MonoBehaviour
 
                     string name = $"{currentSelected.actor.Name}\n{actorName}\nX: {pos.x}, Y: {pos.y}";
                     selectedText.text = name;
-                    selectedText.transform.position = cam.WorldToScreenPoint(av.transform.position);
+                    selectedText.transform.position = Input.mousePosition;
 
                     if (Input.GetKeyDown(KeyCode.E))
                     {
@@ -99,7 +99,7 @@ public class ObjectSelector : MonoBehaviour
 
             if (currentSelectedWall != null)
             {
-                selectedText.transform.position = cam.WorldToScreenPoint(currentSelectedWall.transform.position);
+                selectedText.transform.position = Input.mousePosition;
                 Vector3 pos = currentSelectedWall.transform.position;
                 selectedText.text = $"Wall Group: {currentSelectedWall.group}\nWall Index: {currentSelectedWall.index}\nBgUnit: {currentSelectedWall.bguIndex}\nModel: {currentSelectedWall.GetModelNumber()}\nType: {currentSelectedWall.type}\nX: {pos.x}, Y: {pos.y}, Z: {pos.z}\nE to toggle semisolid\n[] to move forward and back\n-= to change model";
                 

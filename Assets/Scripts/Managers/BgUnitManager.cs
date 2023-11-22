@@ -56,22 +56,24 @@ public class BgUnitManager : Manager
         beltRailRenderers = new List<LineRenderer[]>();
         beltRailPoints = new List<List<WallPoint>>();
 
-        for (int i = 0; i < level.root.BgUnits.Count; i++)
+        if (level.root.BgUnits != null)
         {
-            wallObject = new($"Wall {i}");
-            wallObject.transform.SetParent(transform);
-            wallRenderers.Add(new LineRenderer[] { });
-            wallPoints.Add(new List<WallPoint>());
-            beltRailRenderers.Add(new LineRenderer[] { });
-            beltRailPoints.Add(new List<WallPoint>());
+            for (int i = 0; i < level.root.BgUnits.Count; i++)
+            {
+                wallObject = new($"Wall {i}");
+                wallObject.transform.SetParent(transform);
+                wallRenderers.Add(new LineRenderer[] { });
+                wallPoints.Add(new List<WallPoint>());
+                beltRailRenderers.Add(new LineRenderer[] { });
+                beltRailPoints.Add(new List<WallPoint>());
 
-            UpdateWallRenderers(i);
+                UpdateWallRenderers(i);
+            }
         }
     }
 
     public void UpdateWallRenderers(int bguIndex)
     {
-        Debug.Log($"Updating wall renderers: {bguIndex + 1}/{LevelLoader.Level.root.BgUnits.Count}");
         if (wallRenderers[bguIndex] != null)
             foreach (LineRenderer lr in wallRenderers[bguIndex])
                 if (lr != null)
@@ -209,6 +211,11 @@ public class BgUnitManager : Manager
                     }
 
                     BgWall wall = bgu.Walls[group];
+                    if (wall.ExternalRail.Points.Count <= index)
+                    {
+                        wall.ExternalRail.Points.Add(new Point());
+                        index = wall.ExternalRail.Points.Count - 1;
+                    }
                     Point p = new()
                     {
                         Translate = Camera.main.ScreenToWorldPoint(Input.mousePosition).ToArray()
@@ -225,6 +232,11 @@ public class BgUnitManager : Manager
                     }
 
                     BeltRail rail = bgu.BeltRails[group];
+                    if (rail.Points.Count <= index)
+                    {
+                        rail.Points.Add(new Point());
+                        index = rail.Points.Count - 1;
+                    }
                     Point p = new()
                     {
                         Translate = Camera.main.ScreenToWorldPoint(Input.mousePosition).ToArray()

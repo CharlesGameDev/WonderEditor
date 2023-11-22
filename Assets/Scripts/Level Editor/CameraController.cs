@@ -29,12 +29,13 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(2))
+        bool canMove = !EventSystem.current.IsPointerOverGameObject();
+        if (canMove && Input.GetMouseButtonDown(2))
         {
             lastPosition = Input.mousePosition;
         }
 
-        if (Input.GetMouseButton(2))
+        if (canMove && Input.GetMouseButton(2))
         {
             Vector3 delta = Input.mousePosition - lastPosition;
             float sens = mouseSensitivity * currentZoom;
@@ -43,7 +44,7 @@ public class CameraController : MonoBehaviour
         }
 
         float scroll = Input.mouseScrollDelta.y * scrollSpeed;
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (!canMove)
             scroll = 0;
 
         rawZoom += scroll;

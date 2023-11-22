@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Area Param Editor.unity
     guid: 8adb2bdc915d5bb4f9624089e7b77e98
+  - enabled: 1
+    path: Assets/Scenes/MSBT Editor.unity
+    guid: e44130cb878865e4ab1b32a6e2a7a255
   m_configObjects: {}

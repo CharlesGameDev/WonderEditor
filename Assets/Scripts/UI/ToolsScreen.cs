@@ -1,5 +1,4 @@
 using Octokit;
-using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
@@ -11,10 +10,20 @@ public class ToolsScreen : MonoBehaviour
     [SerializeField] TMP_Text creditsText;
     [SerializeField] GameObject downloadPopupBox;
     [SerializeField] TMP_Text downloadPopupText;
+    [SerializeField] AudioSource musicSource;
+    [SerializeField] AudioClip randomMusic;
+    [SerializeField, Range(0, 1)] float randomMusicChance;
 
     private IEnumerator Start()
     {
         creditsText.text = string.Format(creditsText.text, Application.version);
+
+        if (Random.value <= randomMusicChance)
+        {
+            musicSource.clip = randomMusic;
+            musicSource.loop = false;
+            musicSource.Play();
+        }
 
         var github = new GitHubClient(new ProductHeaderValue("WonderEditor"));
 
@@ -22,9 +31,9 @@ public class ToolsScreen : MonoBehaviour
         yield return new WaitUntil(() => t.IsCompleted);
 
         Release release = t.Result[0];
-        if (release.Name != Application.version) {
+        if (release.TagName != Application.version) {
             downloadPopupBox.SetActive(true);
-            downloadPopupText.text = string.Format(downloadPopupText.text, Application.version, release.Name);
+            downloadPopupText.text = string.Format(downloadPopupText.text, Application.version, release.TagName);
         }
     }
 }

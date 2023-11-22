@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -100,9 +100,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   point:
     Translate: []
-  lineIndex: 0
+  index: 0
+  bguIndex: 0
+  group: 0
+  type: 0
   lineRenderer: {fileID: 0}
-  sr: {fileID: 0}
   hoverColor: {r: 0.8509804, g: 0.38431373, b: 0.34901962, a: 0.6666667}
 --- !u!58 &8623319309288710794
 CircleCollider2D:

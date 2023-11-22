@@ -32,19 +32,19 @@ public class Inspector : MonoBehaviour
 
     private void Awake()
     {
-        nameInput.onValueChanged.AddListener(SetName);
-        gyamlInput.onValueChanged.AddListener(SetGyaml);
-        hashInput.onValueChanged.AddListener(SetHash);
-        areaHashInput.onValueChanged.AddListener(SetAreaHash);
-        translateXInput.onValueChanged.AddListener(SetTranslateX);
-        translateYInput.onValueChanged.AddListener(SetTranslateY);
-        translateZInput.onValueChanged.AddListener(SetTranslateZ);
-        scaleXInput.onValueChanged.AddListener(SetScaleX);
-        scaleYInput.onValueChanged.AddListener(SetScaleY);
-        scaleZInput.onValueChanged.AddListener(SetScaleZ);
-        rotateXInput.onValueChanged.AddListener(SetRotateX);
-        rotateYInput.onValueChanged.AddListener(SetRotateY);
-        rotateZInput.onValueChanged.AddListener(SetRotateZ);
+        nameInput.onEndEdit.AddListener(SetName);
+        gyamlInput.onEndEdit.AddListener(SetGyaml);
+        hashInput.onEndEdit.AddListener(SetHash);
+        areaHashInput.onEndEdit.AddListener(SetAreaHash);
+        translateXInput.onEndEdit.AddListener(SetTranslateX);
+        translateYInput.onEndEdit.AddListener(SetTranslateY);
+        translateZInput.onEndEdit.AddListener(SetTranslateZ);
+        scaleXInput.onEndEdit.AddListener(SetScaleX);
+        scaleYInput.onEndEdit.AddListener(SetScaleY);
+        scaleZInput.onEndEdit.AddListener(SetScaleZ);
+        rotateXInput.onEndEdit.AddListener(SetRotateX);
+        rotateYInput.onEndEdit.AddListener(SetRotateY);
+        rotateZInput.onEndEdit.AddListener(SetRotateZ);
     }
 
     public void OpenWiki()
@@ -63,6 +63,20 @@ public class Inspector : MonoBehaviour
     {
         selectedActor = actor;
 
+        nameInput.text = selectedActor.actor.Name;
+        gyamlInput.text = selectedActor.actor.Gyaml;
+        hashInput.text = selectedActor.actor.Hash.ToString();
+        areaHashInput.text = selectedActor.actor.AreaHash.ToString();
+        translateXInput.text = selectedActor.actor.Translate[0].ToString();
+        translateYInput.text = selectedActor.actor.Translate[1].ToString();
+        translateZInput.text = selectedActor.actor.Translate[2].ToString();
+        scaleXInput.text = selectedActor.actor.Scale[0].ToString();
+        scaleYInput.text = selectedActor.actor.Scale[1].ToString();
+        scaleZInput.text = selectedActor.actor.Scale[2].ToString();
+        float[] rotate = selectedActor.actor.Rotate.RadToDeg();
+        rotateXInput.text = rotate[0].ToString();
+        rotateYInput.text = rotate[1].ToString();
+        rotateZInput.text = rotate[2].ToString();
         gameObject.SetActive(true);
     }
 
@@ -79,27 +93,6 @@ public class Inspector : MonoBehaviour
 
         selectedActor.actor.Gyaml = gyaml;
         selectedActor.UpdateSprite();
-    }
-
-    private void Update()
-    {
-        if (selectedActor != null)
-        {
-            nameInput.text = selectedActor.actor.Name;
-            gyamlInput.text = selectedActor.actor.Gyaml;
-            hashInput.text = selectedActor.actor.Hash.ToString();
-            areaHashInput.text = selectedActor.actor.AreaHash.ToString();
-            translateXInput.text = selectedActor.actor.Translate[0].ToString();
-            translateYInput.text = selectedActor.actor.Translate[1].ToString();
-            translateZInput.text = selectedActor.actor.Translate[2].ToString();
-            scaleXInput.text = selectedActor.actor.Scale[0].ToString();
-            scaleYInput.text = selectedActor.actor.Scale[1].ToString();
-            scaleZInput.text = selectedActor.actor.Scale[2].ToString();
-            float[] rotate = selectedActor.actor.Rotate.RadToDeg();
-            rotateXInput.text = rotate[0].ToString();
-            rotateYInput.text = rotate[1].ToString();
-            rotateZInput.text = rotate[2].ToString();
-        }
     }
 
     public void EditDynamicValues()

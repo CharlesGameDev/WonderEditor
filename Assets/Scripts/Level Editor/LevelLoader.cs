@@ -37,11 +37,21 @@ public class LevelLoader : MonoBehaviour
             using var decompressor = new Decompressor();
             var decompressedData = decompressor.Unwrap(data).ToArray();
 
-            BymlFile file = new(decompressedData);
-            yaml_content = file.ToYaml();
+            try
+            {
+                BymlFile file = new(decompressedData);
+                yaml_content = file.ToYaml();
+            }
+            catch (BymlException e)
+            {
+                ErrorPopup.Show("BymlException", $"Failed to read BYML content.\n{e.Message}");
+                return;
+            }
+        } else
+        {
+            ErrorPopup.Show("InvalidFileExtension", "Invalid file extension.");
+            return;
         }
-
-        if (yaml_content == "") return;
 
         var deserializer = new DeserializerBuilder()
             .WithTagMapping("!ul", typeof(ulong))

@@ -1,18 +1,15 @@
-using MsbtEditor;
-using Nintendo.Byml;
+using Fushigi.Msbt;
 using SFB;
 using System.IO;
 using UnityEngine;
-using YamlDotNet.Serialization;
-using ZstdSharp;
 
 public class MSBTLoader : MonoBehaviour
 {
     public static MSBTLoader Instance { get; private set; }
 
-    public MSBT msbt;
-    public static MSBT MSBT => Instance.msbt;
-    string filePath;
+    public MsbtFile msbt;
+    public static MsbtFile MSBT => Instance.msbt;
+    public string filePath;
     [SerializeField] GameObject loadedDisable;
     [SerializeField] GameObject loadedEnable;
     [SerializeField] MSBTEditor editor;
@@ -30,8 +27,15 @@ public class MSBTLoader : MonoBehaviour
         if (paths.Length == 0) return;
         filePath = paths[0];
 
-        msbt = new MSBT(filePath);
-
+        try
+        {
+            msbt = new MsbtFile(filePath);
+        }
+        catch (EndOfStreamException)
+        {
+            ErrorPopup.Show("EndOfStreamException", "Invalid MSBT file.");
+            return;
+        }
         loadedDisable.SetActive(false);
         loadedEnable.SetActive(true);
 
@@ -40,6 +44,6 @@ public class MSBTLoader : MonoBehaviour
 
     public void Save()
     {
-        msbt.Save();
+        msbt.Save(filePath);
     }
 }

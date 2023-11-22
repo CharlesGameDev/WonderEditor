@@ -18,7 +18,9 @@ public class DynamicProperties : MonoBehaviour
 
     [SerializeField] DynamicPropertyField propertyPrefab;
     [SerializeField] Transform properties;
+    [SerializeField] string wikiUrlFormat;
     Dictionary<string, object> values;
+    Dictionary<string, DynamicPropertyField> propObjects;
     ActorView actor;
 
     public void ApplyChanges()
@@ -43,6 +45,7 @@ public class DynamicProperties : MonoBehaviour
 
         for (int i = 0; i < properties.childCount; i++)
             Destroy(properties.GetChild(i).gameObject);
+        propObjects = new Dictionary<string, DynamicPropertyField>();
 
         if (actor.actor.Dynamic == null) return;
 
@@ -50,17 +53,23 @@ public class DynamicProperties : MonoBehaviour
 
         foreach (var item in actor.actor.Dynamic)
         {
-            CreateProp(item.Key, item.Value);
+            DynamicPropertyField pfield = CreateProp(item.Key, item.Value);
+            propObjects.Add(item.Key, pfield);
         }
     }
 
-    void CreateProp(string key, object value)
+    DynamicPropertyField CreateProp(string key, object value)
     {
         DynamicPropertyField pfield = Instantiate(propertyPrefab, properties);
         
         TMP_InputField nameField = pfield.field1;
         nameField.text = key;
         nameField.name = key;
+        pfield.onRemove.RemoveAllListeners();
+        pfield.onRemove.AddListener(() =>
+        {
+            RemoveProperty(key);
+        });
 
         nameField.onValueChanged.AddListener(value =>
         {
@@ -94,6 +103,8 @@ public class DynamicProperties : MonoBehaviour
 
             field.gameObject.SetActive(true);
         }
+
+        return pfield;
     }
 
     public void SetPropertyName(string key, string value)
@@ -104,5 +115,23 @@ public class DynamicProperties : MonoBehaviour
     public void SetProperty(string key, object value)
     {
         values[key] = value;
+    }
+
+    public void RemoveProperty(string key)
+    {
+        values.Remove(key);
+        Destroy(propObjects[key].gameObject);
+        Debug.Log(key);
+        propObjects.Remove(key);
+    }
+
+    public void OpenWiki()
+    {
+        if (actor == null)
+        {
+            ErrorPopup.Show("NullReferenceException", "No actor selected.");
+            return;
+        }
+        Application.OpenURL(string.Format(wikiUrlFormat, actor.actor.Gyaml));
     }
 }
